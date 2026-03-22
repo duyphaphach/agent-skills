@@ -12,6 +12,7 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | ----- | ----------- |
 | [mcp-cli](./packages/skills/mcp-cli) | Interface for MCP (Model Context Protocol) servers via CLI. Use when you need... |
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
+| [tech-explain](./packages/skills/tech-explain) | Explain unfamiliar technologies with a concise framework. Use when the user a... |
 <!-- END:Available-Skills -->
 
 ## Installation

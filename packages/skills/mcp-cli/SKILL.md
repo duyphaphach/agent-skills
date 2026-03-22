@@ -3,8 +3,8 @@ name: mcp-cli
 description: Interface for MCP (Model Context Protocol) servers via CLI. Use when you need to interact with external tools, APIs, or data sources through MCP servers.
 license: MIT
 metadata:
-  author: "duyphaphach"
-  repository: "git@git.ekotek.vn:d2/ekotek-poc/autotest/qa-skills.git"
+  author: "alexpham"
+  repository: "git@github.com:duyphaphach/agent-skills.git"
   version: "1.0.0"
   keywords: "ai, agent, skill"
 ---

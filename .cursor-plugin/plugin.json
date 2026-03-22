@@ -1,12 +1,12 @@
 {
-  "name": "ekotek-qa-agent-skills",
-  "description": "ekotek qa agent skills",
+  "name": "alex-agent-skills",
+  "description": "alex agent skills",
   "version": "1.0.0",
   "author": {
-    "name": "duyphaphach",
-    "email": "duy.pham2@ekotek.vn"
+    "name": "alexpham",
+    "email": "duyphamle97@gmail.com"
   },
-  "repository": "git@git.ekotek.vn:d2/ekotek-poc/autotest/qa-skills.git",
+  "repository": "git@github.com:duyphaphach/agent-skills.git",
   "license": "MIT",
   "keywords": [
     "ai",

@@ -1,12 +1,12 @@
 {
-  "name": "ekotek-qa-agent-skills",
-  "description": "ekotek qa agent skills",
+  "name": "alex-agent-skills",
+  "description": "alex agent skills",
   "version": "1.0.0",
   "author": {
-    "name": "duyphaphach",
-    "email": "duy.pham2@ekotek.vn"
+    "name": "alexpham",
+    "email": "duyphamle97@gmail.com"
   },
-  "repository": "git@git.ekotek.vn:d2/ekotek-poc/autotest/qa-skills.git",
+  "repository": "git@github.com:duyphaphach/agent-skills.git",
   "license": "MIT",
   "keywords": [
     "ai",
@@ -34,6 +34,23 @@
       "source": "./packages/skills/playwright-cli",
       "license": "MIT",
       "keywords": []
+    },
+    {
+      "name": "tech-explain",
+      "description": "Explain unfamiliar technologies with a concise framework. Use when the user asks what a technology is, why it exists, how it works, where it fits, what usually goes with it, or what alternatives solve similar problems.",
+      "version": "1.0.0",
+      "source": "./packages/skills/tech-explain",
+      "license": "MIT",
+      "keywords": [
+        "ai",
+        "agent",
+        "skill",
+        "technology",
+        "explanation",
+        "framework",
+        "ecosystem",
+        "alternatives"
+      ]
     }
   ]
 }

@@ -20,6 +20,13 @@
         "references/tracing.md",
         "references/video-recording.md"
       ]
+    },
+    {
+      "name": "tech-explain",
+      "description": "Explain unfamiliar technologies with a concise framework. Use when the user asks what a technology is, why it exists, how it works, where it fits, what usually goes with it, or what alternatives solve similar problems.",
+      "files": [
+        "SKILL.md"
+      ]
     }
   ]
 }
