@@ -28,26 +28,10 @@
       ]
     },
     {
-      "name": "php-pro",
-      "description": "Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.",
-      "version": "1.1.0",
-      "source": "./packages/skills/php-pro",
-      "license": "MIT",
-      "keywords": []
-    },
-    {
       "name": "playwright-cli",
       "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract information from web pages.",
       "version": "1.0.0",
       "source": "./packages/skills/playwright-cli",
-      "license": "MIT",
-      "keywords": []
-    },
-    {
-      "name": "wordpress-pro",
-      "description": "Develops custom WordPress themes and plugins, creates and registers Gutenberg blocks and block patterns, configures WooCommerce stores, implements WordPress REST API endpoints, applies security hardening (nonces, sanitization, escaping, capability checks), and optimizes performance through caching and query tuning. Use when building WordPress themes, writing plugins, customizing Gutenberg blocks, extending WooCommerce, working with ACF, using the WordPress REST API, applying hooks and filters, or improving WordPress performance and security.",
-      "version": "1.1.0",
-      "source": "./packages/skills/wordpress-pro",
       "license": "MIT",
       "keywords": []
     }

@@ -8,18 +8,6 @@
       ]
     },
     {
-      "name": "php-pro",
-      "description": "Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.",
-      "files": [
-        "SKILL.md",
-        "references/async-patterns.md",
-        "references/laravel-patterns.md",
-        "references/modern-php-features.md",
-        "references/symfony-patterns.md",
-        "references/testing-quality.md"
-      ]
-    },
-    {
       "name": "playwright-cli",
       "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract information from web pages.",
       "files": [
@@ -31,18 +19,6 @@
         "references/test-generation.md",
         "references/tracing.md",
         "references/video-recording.md"
-      ]
-    },
-    {
-      "name": "wordpress-pro",
-      "description": "Develops custom WordPress themes and plugins, creates and registers Gutenberg blocks and block patterns, configures WooCommerce stores, implements WordPress REST API endpoints, applies security hardening (nonces, sanitization, escaping, capability checks), and optimizes performance through caching and query tuning. Use when building WordPress themes, writing plugins, customizing Gutenberg blocks, extending WooCommerce, working with ACF, using the WordPress REST API, applying hooks and filters, or improving WordPress performance and security.",
-      "files": [
-        "SKILL.md",
-        "references/gutenberg-blocks.md",
-        "references/hooks-filters.md",
-        "references/performance-security.md",
-        "references/plugin-architecture.md",
-        "references/theme-development.md"
       ]
     }
   ]

@@ -11,9 +11,7 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | Skill | Description |
 | ----- | ----------- |
 | [mcp-cli](./packages/skills/mcp-cli) | Interface for MCP (Model Context Protocol) servers via CLI. Use when you need... |
-| [php-pro](./packages/skills/php-pro) | Use when building PHP applications with modern PHP 8.3+ features, Laravel, or... |
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
-| [wordpress-pro](./packages/skills/wordpress-pro) | Develops custom WordPress themes and plugins, creates and registers Gutenberg... |
 <!-- END:Available-Skills -->
 
 ## Installation
