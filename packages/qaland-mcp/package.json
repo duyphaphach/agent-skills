@@ -1,0 +1,51 @@
+{
+  "name": "@d2/qaland-mcp",
+  "version": "1.0.4",
+  "private": false,
+  "description": "QALand MCP server for local file conversions and Dify knowledge/workflow APIs.",
+  "type": "module",
+  "bin": {
+    "qaland-mcp": "./bin/qaland-mcp.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "bin",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "mcp-cli:register": "node ./scripts/inject-mcp-config.js --server-name qaland-mcp-test",
+    "start:stdio": "node ./bin/qaland-mcp.js",
+    "start": "node dist/index.js",
+    "inspector": "npx @modelcontextprotocol/inspector node --import dotenv/config dist/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.27.1",
+    "axios": "1.13.6",
+    "axios-cache-interceptor": "1.12.0",
+    "dotenv": "^16.4.7",
+    "express": "5.1.0",
+    "fs-extra": "11.3.2",
+    "marked": "17.0.4",
+    "merge-anything": "6.0.6",
+    "pino": "10.3.1",
+    "pino-pretty": "13.1.3",
+    "turndown": "7.2.2",
+    "xlsx": "0.18.5",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.3",
+    "@types/fs-extra": "11.0.4",
+    "@types/node": "24.5.2",
+    "@types/turndown": "5.0.5",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2"
+  }
+}

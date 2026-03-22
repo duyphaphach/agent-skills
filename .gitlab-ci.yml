@@ -1,0 +1,39 @@
+default:
+  image: node:22
+
+stages:
+  - verify
+  - publish
+
+variables:
+  QALAND_MCP_PATH: packages/qaland-mcp
+
+qaland_mcp_build:
+  stage: verify
+  rules:
+    - changes:
+        - packages/qaland-mcp/**/*
+        - .gitlab-ci.yml
+  script:
+    - cd "$QALAND_MCP_PATH"
+    - npm ci
+    - npm run build
+
+qaland_mcp_publish:
+  stage: publish
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^qaland-mcp-v\d+\.\d+\.\d+([-.].+)?$/'
+  script:
+    - cd "$QALAND_MCP_PATH"
+    - PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+    - TAG_VERSION="${CI_COMMIT_TAG#qaland-mcp-v}"
+    - |
+      if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+        echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)."
+        exit 1
+      fi
+    - echo "@d2:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - npm ci
+    - npm run build
+    - npm publish

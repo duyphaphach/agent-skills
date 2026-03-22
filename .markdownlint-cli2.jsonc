@@ -1,0 +1,8 @@
+{
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    "packages/qaland-mcp/node_modules/**"
+  ]
+}
