@@ -6,7 +6,7 @@ metadata:
   author: "alexpham"
   repository: "git@github.com:duyphaphach/agent-skills.git"
   version: "1.0.0"
-  keywords: "ai, agent, skill, technology, explanation, framework, ecosystem, alternatives"
+  keywords: "ai, agent, skill, technology, explanation, framework, ecosystem, alternatives, real-life reference"
 ---
 
 # Tech Explain
@@ -113,6 +113,8 @@ Use this structure as the default:
 **TLDR:** ...
 
 Details: ...
+
+**Real Life Reference/Inspired By**:...
 
 ## How it works
 **TLDR:** ...
