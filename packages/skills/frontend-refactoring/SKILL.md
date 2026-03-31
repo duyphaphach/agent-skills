@@ -14,6 +14,7 @@ metadata:
 - **No functional changes.** Only class names, element types, and SCSS selectors change. Behavior and visuals must be identical before and after.
 - **Always pair HTML and SCSS.** Treat them as a unit — renaming one without the other silently breaks styles.
 - **No `!important`.** Fix selector scope, nesting, or cascade order instead. If a rule only works with `!important`, the refactor is not finished.
+- **Keep style blocks in a fixed order.** Inside each selector block: `@extend`/`@include` first, nested selectors next, raw CSS declarations last. Raw declarations must be ordered: layout → spacing → typography → decoration.
 
 ---
 
@@ -21,14 +22,14 @@ metadata:
 
 ```
 0. Remove all !important — fix selector scope, nesting, or import order before touching anything else
-1. Identify one repeating UI pattern (run scan-partials.sh first)
+1. Identify one repeating UI pattern (run `scan-partials.mjs` first)
 2. Assess: can dynamic rendering reduce duplication? (hardcoded list → loop over data array)
 3. Find all connected SCSS files referencing the old class names
 4. Determine the correct replacement (native element → Bootstrap → semantic → new shared class)
 5. Rename HTML classes and update SCSS selectors together
-6. Apply mixins, tokens, and conventions (layout mixins → spacing mixins → token variables)
-7. Write the final SCSS as properly nested structure
-8. Run verify-conventions.sh — fix all FAIL lines before continuing
+6. Gather required mixins, then apply mixins, tokens, and conventions (layout mixins → spacing mixins → token variables)
+7. Write the final SCSS as properly nested structure with `@include` and `@extend` at the top of each block, raw CSS ALWAYS at the bottom
+8. Run `verify-conventions.mjs` — fix all FAIL lines before continuing
 9. Verify: visual, layout, and behavior are unchanged
 10. Repeat for the next pattern
 ```
@@ -57,7 +58,7 @@ For each occurrence, fix the cascade instead:
 ### Step 1 — Identify repeating UI patterns
 
 ```bash
-bash .agents/skills/frontend-refactoring/scripts/scan-partials.sh views/
+node skills/frontend-refactoring/scripts/scan-partials.mjs views/
 ```
 
 Scan for:
@@ -108,6 +109,15 @@ A class may appear in multiple files — list them all before editing anything.
 
 ### Step 6 — Apply mixins, tokens, and conventions (MUST)
 
+Before writing declarations for a selector block:
+
+1. List every mixin and shared selector the block needs (`flex-row`, `px`, `py`, `transition`, placeholders for `@extend`, etc.)
+2. Add all required `@extend` and `@include` lines first
+3. Write nested selectors and states after the block's own directives
+4. Keep the block's raw CSS declarations at the bottom, ordered layout → spacing → typography → decoration
+
+Within a block, `@extend` and `@include` lines should be grouped at the top. Do not scatter them between nested selectors or raw properties.
+
 **Priority order:**
 
 | Priority    | Use                                                              | Instead of                                                                   |
@@ -134,11 +144,27 @@ A class may appear in multiple files — list them all before editing anything.
 
 All rules live inside their parent selector. Use `&` for pseudo-classes, states, and modifiers. Max 3 levels deep.
 
+**Style order rule:** every selector block must follow one consistent internal order. Do not reorder declarations ad hoc from block to block.
+
+Block order:
+
+1. `@extend` and `@include` lines
+2. Nested selectors, pseudo-classes, states, and modifiers
+3. Raw CSS properties ordered: layout → spacing → typography → decoration
+
+For raw CSS declarations, use this internal order:
+
+1. Layout: `display`, `position`, `inset`, `width`, `height`, `flex`, `grid`, `overflow`
+2. Spacing: `margin`, `padding`, `gap`
+3. Typography: `font`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-*`
+4. Decoration: `color`, `background`, `border`, `border-radius`, `box-shadow`, `opacity`
+
 **Wrong:**
 
 ```scss
 .nav-item {
-  padding: 8px;
+  color: var(--stone-700);
+  @include p(8px);
 }
 .nav-item:hover {
   background: var(--stone-100);
@@ -162,6 +188,11 @@ All rules live inside their parent selector. Use `&` for pseudo-classes, states,
     .nav-link {
       color: var(--stone-700);
     }
+
+    display: flex;
+    gap: 8px;
+    font-size: var(--text-sm);
+    color: var(--stone-700);
   }
 }
 ```
@@ -171,12 +202,12 @@ All rules live inside their parent selector. Use `&` for pseudo-classes, states,
 ```scss
 // Wrong
 .status-badge {
-  @include flex-row(4px);
   font-size: var(--text-sm);
+  @include flex-row(4px);
 }
 .risk-label {
-  @include flex-row(4px);
   font-size: var(--text-sm);
+  @include flex-row(4px);
 }
 
 // Correct
@@ -197,16 +228,16 @@ All rules live inside their parent selector. Use `&` for pseudo-classes, states,
 
 ```bash
 # SCSS only
-bash .agents/skills/frontend-refactoring/scripts/lint-scss.sh web/scss/overrides/_fl-component.scss
+node skills/frontend-refactoring/scripts/lint-scss.mjs web/scss/overrides/_fl-component.scss
 
 # SCSS + template
-bash .agents/skills/frontend-refactoring/scripts/verify-conventions.sh \
+node skills/frontend-refactoring/scripts/verify-conventions.mjs \
   web/scss/overrides/_fl-component.scss views/path/to/template.php
 ```
 
-`verify-conventions.sh` additionally checks: `.facelift-layout` wrapper, flat selectors, nesting depth, component-scoped class remnants, inline styles, appearance-based class names.
+`verify-conventions.mjs` additionally checks: `.facelift-layout` wrapper, flat selectors, nesting depth, component-scoped class remnants, inline styles, appearance-based class names.
 
-Both `lint-scss.sh` and `verify-conventions.sh` fail on any `!important`. Do not waive that check.
+Both `lint-scss.mjs` and `verify-conventions.mjs` fail on any `!important`. Do not waive that check.
 
 Fix all **FAIL** lines. **WARN** lines are advisory.
 
@@ -249,11 +280,16 @@ Extract a block when:
 - [ ] No dead SCSS selectors left behind
 - [ ] New classes: Bootstrap first, then semantic, never appearance-based
 - [ ] All SCSS nested — `&` for pseudo-classes, states, modifiers
+- [ ] Gather each block's mixins before writing declarations
 - [ ] Layout mixins for flex/grid (`@include flex-row`, `flex-col`, `grid-cols`)
 - [ ] Spacing mixins for padding/margin (`@include p`, `px`, `py`)
+- [ ] Every selector block follows the same internal style order
+- [ ] `@extend` and `@include` lines grouped at the top of each block
+- [ ] Raw CSS declarations kept at the bottom of each block
+- [ ] Raw CSS declaration order is layout → spacing → typography → decoration
 - [ ] Shared selectors merged with comma grouping
 - [ ] No hardcoded values — tokens from `web/scss/abstracts/`
-- [ ] `verify-conventions.sh` passes (zero FAIL lines)
+- [ ] `verify-conventions.mjs` passes (zero FAIL lines)
 - [ ] Visual, layout, and behavior verified unchanged
-- [ ] Blocks in 3+ views or >40 lines → extracted to a partial
+- [ ] Blocks in 3+ views or >150 lines → extracted to a partial
 - [ ] Repeated data-only blocks → dynamic rendering (loop)
