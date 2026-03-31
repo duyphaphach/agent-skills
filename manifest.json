@@ -16,6 +16,22 @@
   ],
   "skills": [
     {
+      "name": "basecamp",
+      "description": "|",
+      "version": "1.0.0",
+      "source": "./packages/skills/basecamp",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "frontend-refactoring",
+      "description": "Use when the user wants to migrate templates to the new design system convention without breaking behavior or visuals. Examples: \"Refactor this template\", \"Migrate this view to the new convention\", \"Clean up these class names\", \"Extract this pattern to a partial\", \"Replace repeated HTML with a loop\"",
+      "version": "1.0.0",
+      "source": "./packages/skills/frontend-refactoring",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
       "name": "mcp-cli",
       "description": "Interface for MCP (Model Context Protocol) servers via CLI. Use when you need to interact with external tools, APIs, or data sources through MCP servers.",
       "version": "1.0.0",
@@ -49,7 +65,8 @@
         "explanation",
         "framework",
         "ecosystem",
-        "alternatives"
+        "alternatives",
+        "real-life reference"
       ]
     }
   ]

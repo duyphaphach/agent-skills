@@ -1,6 +1,23 @@
 {
   "skills": [
     {
+      "name": "basecamp",
+      "description": "|",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "frontend-refactoring",
+      "description": "Use when the user wants to migrate templates to the new design system convention without breaking behavior or visuals. Examples: \"Refactor this template\", \"Migrate this view to the new convention\", \"Clean up these class names\", \"Extract this pattern to a partial\", \"Replace repeated HTML with a loop\"",
+      "files": [
+        "SKILL.md",
+        "scripts/lint-scss.sh",
+        "scripts/scan-partials.sh",
+        "scripts/verify-conventions.sh"
+      ]
+    },
+    {
       "name": "mcp-cli",
       "description": "Interface for MCP (Model Context Protocol) servers via CLI. Use when you need to interact with external tools, APIs, or data sources through MCP servers.",
       "files": [
