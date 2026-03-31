@@ -13,14 +13,14 @@ metadata:
 - **One snippet at a time.** Isolate one pattern, migrate it fully, verify, then move on.
 - **No functional changes.** Only class names, element types, and SCSS selectors change. Behavior and visuals must be identical before and after.
 - **Always pair HTML and SCSS.** Treat them as a unit — renaming one without the other silently breaks styles.
-- **No `!important`.** Fix specificity instead. Move the rule inside `.facelift-layout`, increase selector depth, or restructure the cascade. `!important` is a sign the selector isn't winning cleanly.
+- **No `!important`.** Fix selector scope, nesting, or cascade order instead. If a rule only works with `!important`, the refactor is not finished.
 
 ---
 
 ## Workflow
 
 ```
-0. Remove all !important — fix specificity before touching anything else
+0. Remove all !important — fix selector scope, nesting, or import order before touching anything else
 1. Identify one repeating UI pattern (run scan-partials.sh first)
 2. Assess: can dynamic rendering reduce duplication? (hardcoded list → loop over data array)
 3. Find all connected SCSS files referencing the old class names
@@ -45,12 +45,14 @@ Before any refactoring begins, strip every `!important` from the SCSS files in s
 grep -rn '!important' web/scss/overrides/
 ```
 
-For each occurrence, fix specificity instead:
-- Move the rule inside `.facelift-layout` if it isn't already
-- Increase selector depth by nesting under a more specific parent
-- Restructure the cascade so the rule wins without forcing it
+For each occurrence, fix the cascade instead:
 
-`!important` is a sign that a selector isn't winning cleanly — the underlying conflict must be resolved, not suppressed.
+- Move the rule into the correct layer (`base/`, `overrides/_fl-*`, or `pages/`)
+- Increase selector depth by nesting under the real parent structure
+- Adjust import order if the override belongs later in `web/scss/main.scss`
+- Remove duplicate legacy selectors that are still competing
+
+`!important` is not an allowed escape hatch in this repo.
 
 ### Step 1 — Identify repeating UI patterns
 
@@ -59,6 +61,7 @@ bash .agents/skills/frontend-refactoring/scripts/scan-partials.sh views/
 ```
 
 Scan for:
+
 - The same HTML block appearing more than once
 - Component-scoped class names (`aml-*`, `kyc-*`, `client-*`)
 - Inline styles matching something already in the design system
@@ -68,10 +71,12 @@ Pick **one pattern**. Do not attempt multiple in the same pass.
 ### Step 2 — Assess: dynamic rendering
 
 Convert repeated blocks to a loop when:
+
 - Same HTML structure copy-pasted 2+ times with only data values changing
 - Items are already in a PHP/JS array, or adding one requires duplicating HTML
 
 **How:**
+
 1. Extract varying values into a data array (`$items = [...]`)
 2. Replace repeated blocks with a single loop over one item template
 3. Parameterize only what varies
@@ -105,23 +110,23 @@ A class may appear in multiple files — list them all before editing anything.
 
 **Priority order:**
 
-| Priority    | Use                                                     | Instead of                                     |
-| ----------- | ------------------------------------------------------- | ---------------------------------------------- |
+| Priority    | Use                                                              | Instead of                                                                   |
+| ----------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | 1st         | Layout mixin (`@include flex-row(8px)`, `@include transition()`) | `display: flex; flex-direction: row; gap: 8px` / `transition: all 0.2s ease` |
-| 2nd         | Spacing mixin (`@include px(16px)`, `@include py(8px)`) | `padding-inline: 16px; padding-block: 8px`     |
-| 3rd         | Token variable (`var(--stone-500)`, `var(--text-sm)`)   | `color: #6b7280; font-size: 0.875rem`          |
-| Last resort | Raw px on the 4px scale                                 | Only when no token or mixin exists             |
+| 2nd         | Spacing mixin (`@include px(16px)`, `@include py(8px)`)          | `padding-inline: 16px; padding-block: 8px`                                   |
+| 3rd         | Token variable (`var(--stone-500)`, `var(--text-sm)`)            | `color: #6b7280; font-size: 0.875rem`                                        |
+| Last resort | Raw px on the 4px scale                                          | Only when no token or mixin exists                                           |
 
 **Available abstracts:**
 
-| File | What it provides |
-| ---- | ---------------- |
+| File                                  | What it provides                                                                                                                     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `web/scss/abstracts/_layout.scss`     | `flex-row(gap?)`, `flex-col(gap?)`, `grid-cols(cols, gap?)`, `flex-center`, `flex-between`, `transition(props?, duration?, easing?)` |
-| `web/scss/abstracts/_spacing.scss`    | `p`, `m`, `px`, `py`, `mx`, `my`, `pt`, `pb`, `pl`, `pr`, `mt`, `mb`, `ml`, `mr`, `gap`, `gap-x`, `gap-y`, `size` |
-| `web/scss/abstracts/_variables.scss`  | Colors, brand tokens, z-index, breakpoints |
-| `web/scss/abstracts/_typography.scss` | Font sizes, weights, line heights |
-| `web/scss/abstracts/_radius.scss`     | Border-radius values |
-| `web/scss/abstracts/_shadow.scss`     | Box-shadow values |
+| `web/scss/abstracts/_spacing.scss`    | `p`, `m`, `px`, `py`, `mx`, `my`, `pt`, `pb`, `pl`, `pr`, `mt`, `mb`, `ml`, `mr`, `gap`, `gap-x`, `gap-y`, `size`                    |
+| `web/scss/abstracts/_variables.scss`  | Colors, brand tokens, z-index, breakpoints                                                                                           |
+| `web/scss/abstracts/_typography.scss` | Font sizes, weights, line heights                                                                                                    |
+| `web/scss/abstracts/_radius.scss`     | Border-radius values                                                                                                                 |
+| `web/scss/abstracts/_shadow.scss`     | Box-shadow values                                                                                                                    |
 
 **Gap scale:** 4px, 8px, 10px, 12px, 16px, 20px, 24px, 32px, 40px, 48px — normalize odd values to nearest step. 10px is the only non-4x value.
 
@@ -130,35 +135,62 @@ A class may appear in multiple files — list them all before editing anything.
 All rules live inside their parent selector. Use `&` for pseudo-classes, states, and modifiers. Max 3 levels deep.
 
 **Wrong:**
+
 ```scss
-.nav-item { padding: 8px; }
-.nav-item:hover { background: var(--stone-100); }
-.nav-item .nav-link { color: var(--stone-700); }
+.nav-item {
+  padding: 8px;
+}
+.nav-item:hover {
+  background: var(--stone-100);
+}
+.nav-item .nav-link {
+  color: var(--stone-700);
+}
 ```
 
 **Correct:**
+
 ```scss
 .facelift-layout {
   .nav-item {
     @include p(8px);
 
-    &:hover { background: var(--stone-100); }
+    &:hover {
+      background: var(--stone-100);
+    }
 
-    .nav-link { color: var(--stone-700); }
+    .nav-link {
+      color: var(--stone-700);
+    }
   }
 }
 ```
 
 **Merge selectors that share declarations:**
+
 ```scss
 // Wrong
-.status-badge { @include flex-row(4px); font-size: var(--text-sm); }
-.risk-label   { @include flex-row(4px); font-size: var(--text-sm); }
+.status-badge {
+  @include flex-row(4px);
+  font-size: var(--text-sm);
+}
+.risk-label {
+  @include flex-row(4px);
+  font-size: var(--text-sm);
+}
 
 // Correct
-.status-badge, .risk-label { @include flex-row(4px); font-size: var(--text-sm); }
-.status-badge { color: var(--green-600); }
-.risk-label   { color: var(--rose-600); }
+.status-badge,
+.risk-label {
+  @include flex-row(4px);
+  font-size: var(--text-sm);
+}
+.status-badge {
+  color: var(--green-600);
+}
+.risk-label {
+  color: var(--rose-600);
+}
 ```
 
 ### Step 8 — Run convention scripts
@@ -174,21 +206,24 @@ bash .agents/skills/frontend-refactoring/scripts/verify-conventions.sh \
 
 `verify-conventions.sh` additionally checks: `.facelift-layout` wrapper, flat selectors, nesting depth, component-scoped class remnants, inline styles, appearance-based class names.
 
+Both `lint-scss.sh` and `verify-conventions.sh` fail on any `!important`. Do not waive that check.
+
 Fix all **FAIL** lines. **WARN** lines are advisory.
 
 ### Step 9 — Verify: behavior, layout, and visual
 
-| Check | How |
-| ----- | --- |
-| **Visual** | Load the page — identical spacing, colors, typography, borders? |
-| **Layout** | Resize viewport — responsive behavior holds? |
-| **Behavior** | Clicks, hovers, form submissions, JS states work? |
+| Check        | How                                                             |
+| ------------ | --------------------------------------------------------------- |
+| **Visual**   | Load the page — identical spacing, colors, typography, borders? |
+| **Layout**   | Resize viewport — responsive behavior holds?                    |
+| **Behavior** | Clicks, hovers, form submissions, JS states work?               |
 
 Stop and revert if anything changed.
 
 ### Step 10 — Repeat
 
 Priority order for next pattern:
+
 1. Custom utility classes duplicating Bootstrap (`text-align-center` → `text-center`)
 2. Div soup → native elements (`<nav>`, `<ul>`, `<table>`, `<button>`)
 3. Component-scoped class names → generic semantic class
@@ -199,8 +234,9 @@ Priority order for next pattern:
 ## Partials
 
 Extract a block when:
+
 - It appears in **3+ views**, or
-- It exceeds **~40 lines** in one template
+- It exceeds **~150 lines** in one template
 
 **Process:** Extract to a partial (e.g. `_status-badge.php`) → parameterize only what varies → replace inline copies → verify each call site.
 
