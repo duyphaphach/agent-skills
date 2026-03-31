@@ -59,7 +59,18 @@ done < <(grep -nE '^\s+\.[a-z].*\.[a-z]' "$SCSS_FILE" 2>/dev/null \
 [[ $VIOLATIONS -eq $PREV ]] && ok
 
 # --------------------------------------------------------------------------
-# 3. display: flex without layout mixin
+# 3. !important — fix specificity instead
+# --------------------------------------------------------------------------
+echo ""
+echo "[ !important ]"
+PREV=$VIOLATIONS
+while IFS= read -r match; do
+  fail "$match"
+done < <(grep -n '!important' "$SCSS_FILE" 2>/dev/null | grep -v '^\s*//' || true)
+[[ $VIOLATIONS -eq $PREV ]] && ok
+
+# --------------------------------------------------------------------------
+# 4. Raw properties that should use mixins
 # --------------------------------------------------------------------------
 echo ""
 echo "[ display: flex without @include ]"
@@ -69,8 +80,16 @@ while IFS= read -r match; do
 done < <(grep -n 'display:\s*flex' "$SCSS_FILE" 2>/dev/null | grep -v '^\s*//' || true)
 [[ $VIOLATIONS -eq $PREV ]] && ok
 
+echo ""
+echo "[ transition: without @include ]"
+PREV=$VIOLATIONS
+while IFS= read -r match; do
+  fail "$match"
+done < <(grep -nE '^\s*transition\s*:' "$SCSS_FILE" 2>/dev/null | grep -v '^\s*//' || true)
+[[ $VIOLATIONS -eq $PREV ]] && ok
+
 # --------------------------------------------------------------------------
-# 4. Raw padding/margin (not zero resets)
+# 5. Raw padding/margin (not zero resets)
 # --------------------------------------------------------------------------
 echo ""
 echo "[ raw padding / margin (non-zero) ]"

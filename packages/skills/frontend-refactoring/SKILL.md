@@ -13,12 +13,14 @@ metadata:
 - **One snippet at a time.** Isolate one pattern, migrate it fully, verify, then move on.
 - **No functional changes.** Only class names, element types, and SCSS selectors change. Behavior and visuals must be identical before and after.
 - **Always pair HTML and SCSS.** Treat them as a unit — renaming one without the other silently breaks styles.
+- **No `!important`.** Fix specificity instead. Move the rule inside `.facelift-layout`, increase selector depth, or restructure the cascade. `!important` is a sign the selector isn't winning cleanly.
 
 ---
 
 ## Workflow
 
 ```
+0. Remove all !important — fix specificity before touching anything else
 1. Identify one repeating UI pattern (run scan-partials.sh first)
 2. Assess: can dynamic rendering reduce duplication? (hardcoded list → loop over data array)
 3. Find all connected SCSS files referencing the old class names
@@ -34,6 +36,21 @@ metadata:
 ---
 
 ## Step-by-Step
+
+### Step 0 — Remove all `!important`
+
+Before any refactoring begins, strip every `!important` from the SCSS files in scope.
+
+```bash
+grep -rn '!important' web/scss/overrides/
+```
+
+For each occurrence, fix specificity instead:
+- Move the rule inside `.facelift-layout` if it isn't already
+- Increase selector depth by nesting under a more specific parent
+- Restructure the cascade so the rule wins without forcing it
+
+`!important` is a sign that a selector isn't winning cleanly — the underlying conflict must be resolved, not suppressed.
 
 ### Step 1 — Identify repeating UI patterns
 
@@ -90,7 +107,7 @@ A class may appear in multiple files — list them all before editing anything.
 
 | Priority    | Use                                                     | Instead of                                     |
 | ----------- | ------------------------------------------------------- | ---------------------------------------------- |
-| 1st         | Layout mixin (`@include flex-row(8px)`)                 | `display: flex; flex-direction: row; gap: 8px` |
+| 1st         | Layout mixin (`@include flex-row(8px)`, `@include transition()`) | `display: flex; flex-direction: row; gap: 8px` / `transition: all 0.2s ease` |
 | 2nd         | Spacing mixin (`@include px(16px)`, `@include py(8px)`) | `padding-inline: 16px; padding-block: 8px`     |
 | 3rd         | Token variable (`var(--stone-500)`, `var(--text-sm)`)   | `color: #6b7280; font-size: 0.875rem`          |
 | Last resort | Raw px on the 4px scale                                 | Only when no token or mixin exists             |
@@ -99,7 +116,7 @@ A class may appear in multiple files — list them all before editing anything.
 
 | File | What it provides |
 | ---- | ---------------- |
-| `web/scss/abstracts/_layout.scss`     | `flex-row(gap?)`, `flex-col(gap?)`, `grid-cols(cols, gap?)`, `flex-center`, `flex-between` |
+| `web/scss/abstracts/_layout.scss`     | `flex-row(gap?)`, `flex-col(gap?)`, `grid-cols(cols, gap?)`, `flex-center`, `flex-between`, `transition(props?, duration?, easing?)` |
 | `web/scss/abstracts/_spacing.scss`    | `p`, `m`, `px`, `py`, `mx`, `my`, `pt`, `pb`, `pl`, `pr`, `mt`, `mb`, `ml`, `mr`, `gap`, `gap-x`, `gap-y`, `size` |
 | `web/scss/abstracts/_variables.scss`  | Colors, brand tokens, z-index, breakpoints |
 | `web/scss/abstracts/_typography.scss` | Font sizes, weights, line heights |
@@ -191,6 +208,7 @@ Extract a block when:
 
 ## Checklist
 
+- [ ] No `!important` in any new or updated SCSS — fix specificity instead
 - [ ] No `aml-*`, `kyc-*`, `client-*`, `text-align-*` class names in HTML
 - [ ] No dead SCSS selectors left behind
 - [ ] New classes: Bootstrap first, then semantic, never appearance-based

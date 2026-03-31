@@ -34,7 +34,18 @@ done < <(grep -n '#[0-9a-fA-F]\{3,8\}\b' "$FILE" 2>/dev/null | grep -v '^\s*//' 
 PREV=$VIOLATIONS
 
 # ---------------------------------------------------------------------------
-# 2. Raw rem/em values in property declarations — should use var(--text-*) or var(--leading-*)
+# 2. !important — fix specificity instead
+# ---------------------------------------------------------------------------
+echo ""
+echo "[ !important ]"
+while IFS= read -r match; do
+  fail "$match"
+done < <(grep -n '!important' "$FILE" 2>/dev/null | grep -v '^\s*//' || true)
+[[ $VIOLATIONS -eq $PREV ]] && echo "  ok"
+PREV=$VIOLATIONS
+
+# ---------------------------------------------------------------------------
+# 3. Raw rem/em values in property declarations — should use var(--text-*) or var(--leading-*)
 #    Excludes: SCSS variable declarations ($var: ...) and comment lines
 # ---------------------------------------------------------------------------
 echo ""
@@ -49,13 +60,21 @@ done < <(grep -n '[0-9]\+\.\?[0-9]*\(rem\|em\)\b' "$FILE" 2>/dev/null \
 PREV=$VIOLATIONS
 
 # ---------------------------------------------------------------------------
-# 3. display: flex without mixin — should use @include flex-row/col/center/between
+# 3. Raw properties that should use mixins
 # ---------------------------------------------------------------------------
 echo ""
 echo "[ display: flex without mixin ]"
 while IFS= read -r match; do
   fail "$match"
 done < <(grep -n 'display:\s*flex' "$FILE" 2>/dev/null | grep -v '^\s*//' || true)
+[[ $VIOLATIONS -eq $PREV ]] && echo "  ok"
+PREV=$VIOLATIONS
+
+echo ""
+echo "[ transition: without mixin ]"
+while IFS= read -r match; do
+  fail "$match"
+done < <(grep -nE '^\s*transition\s*:' "$FILE" 2>/dev/null | grep -v '^\s*//' || true)
 [[ $VIOLATIONS -eq $PREV ]] && echo "  ok"
 PREV=$VIOLATIONS
 
