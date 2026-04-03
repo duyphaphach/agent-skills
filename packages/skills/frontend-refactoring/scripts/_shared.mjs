@@ -129,3 +129,19 @@ export function firstPixelValue(line) {
   const match = line.match(/\b(\d+)px\b/);
   return match ? match[1] : null;
 }
+
+export function shouldNormalizePixelValue(line) {
+  const pxValue = firstPixelValue(line);
+  if (!pxValue) return false;
+  if (ALLOWED_PX_VALUES.has(pxValue)) return false;
+
+  const numericValue = Number(pxValue);
+  let smallestDelta = Number.POSITIVE_INFINITY;
+
+  for (const allowedValue of ALLOWED_PX_VALUES) {
+    const delta = Math.abs(Number(allowedValue) - numericValue);
+    if (delta < smallestDelta) smallestDelta = delta;
+  }
+
+  return smallestDelta <= 1;
+}
