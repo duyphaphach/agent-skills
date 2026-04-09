@@ -12,8 +12,11 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | ----- | ----------- |
 | [basecamp](./packages/skills/basecamp) | \| |
 | [frontend-refactoring](./packages/skills/frontend-refactoring) | Use when the user wants to migrate templates to the new design system convent... |
+| [html-to-scss-boilerplate](./packages/skills/html-to-scss-boilerplate) | Generate blank SCSS scaffold from HTML structure. Keywords: scss boilerplate,... |
+| [implementation-plan](./packages/skills/implementation-plan) | Generate a structured implementation plan for any feature, integration, or re... |
 | [mcp-cli](./packages/skills/mcp-cli) | Interface for MCP (Model Context Protocol) servers via CLI. Use when you need... |
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
+| [repo-overview](./packages/skills/repo-overview) | Quickly understand an unfamiliar repository, monorepo, or microservice codeba... |
 | [tech-explain](./packages/skills/tech-explain) | Explain unfamiliar technologies with a concise framework. Use when the user a... |
 <!-- END:Available-Skills -->
 

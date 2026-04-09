@@ -32,6 +32,22 @@
       "keywords": []
     },
     {
+      "name": "html-to-scss-boilerplate",
+      "description": "Generate blank SCSS scaffold from HTML structure. Keywords: scss boilerplate, scss blocks, scss structure, scaffold scss, style this, set up scss, generate scss, css skeleton.",
+      "version": "1.0.0",
+      "source": "./packages/skills/html-to-scss-boilerplate",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "implementation-plan",
+      "description": "Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, flow diagram, per-phase file targets, and a testing strategy. Language and framework agnostic.",
+      "version": "1.0.0",
+      "source": "./packages/skills/implementation-plan",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
       "name": "mcp-cli",
       "description": "Interface for MCP (Model Context Protocol) servers via CLI. Use when you need to interact with external tools, APIs, or data sources through MCP servers.",
       "version": "1.0.0",
@@ -48,6 +64,14 @@
       "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract information from web pages.",
       "version": "1.0.0",
       "source": "./packages/skills/playwright-cli",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "repo-overview",
+      "description": "Quickly understand an unfamiliar repository, monorepo, or microservice codebase at a high level. Use when the user asks things like \"explain repo\", \"overview repo\", \"understand this repo\", \"map this codebase\",...",
+      "version": "1.0.0",
+      "source": "./packages/skills/repo-overview",
       "license": "MIT",
       "keywords": []
     },

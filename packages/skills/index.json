@@ -12,9 +12,26 @@
       "description": "Use when the user wants to migrate templates to the new design system convention without breaking behavior or visuals. Examples: \"Refactor this template\", \"Migrate this view to the new convention\", \"Clean up these class names\", \"Extract this pattern to a partial\", \"Replace repeated HTML with a loop\"",
       "files": [
         "SKILL.md",
-        "scripts/lint-scss.sh",
-        "scripts/scan-partials.sh",
-        "scripts/verify-conventions.sh"
+        "scripts/_shared.mjs",
+        "scripts/conventions.mjs",
+        "scripts/lint-scss.mjs",
+        "scripts/prettify-scss.mjs",
+        "scripts/scan-partials.mjs",
+        "scripts/verify-conventions.mjs"
+      ]
+    },
+    {
+      "name": "html-to-scss-boilerplate",
+      "description": "Generate blank SCSS scaffold from HTML structure. Keywords: scss boilerplate, scss blocks, scss structure, scaffold scss, style this, set up scss, generate scss, css skeleton.",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "implementation-plan",
+      "description": "Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, flow diagram, per-phase file targets, and a testing strategy. Language and framework agnostic.",
+      "files": [
+        "SKILL.md"
       ]
     },
     {
@@ -36,6 +53,13 @@
         "references/test-generation.md",
         "references/tracing.md",
         "references/video-recording.md"
+      ]
+    },
+    {
+      "name": "repo-overview",
+      "description": "Quickly understand an unfamiliar repository, monorepo, or microservice codebase at a high level. Use when the user asks things like \"explain repo\", \"overview repo\", \"understand this repo\", \"map this codebase\",...",
+      "files": [
+        "SKILL.md"
       ]
     },
     {
