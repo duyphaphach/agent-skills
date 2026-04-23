@@ -1,7 +1,8 @@
 ---
 name: implementation-plan
 description: Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, flow diagram, per-phase file targets, and a testing strategy. Language and framework agnostic.
-allowed-tools: **
+allowed-tools:
+  - "*"
 ---
 
 # Implementation Plan Generator
@@ -95,6 +96,18 @@ Common concern categories:
 
 Output a Markdown document with the sections below, in order. Save it to `docs/<feature-name>-plan.md` (or the project's standard docs location).
 
+### Writing style — plans are read by humans
+
+Plans are reviewed by engineers, product managers, and operators. Write them as a team document, not as a prompt or transcript from an AI tool.
+
+- **Name actions by their outcome, not by the tool that performs them.** Write "Identify upstream callers of `X`" — not "run `gitnexus_impact(...)`". Write "Review staged changes before commit" — not "run `gitnexus_detect_changes(...)`".
+- **No tool-invocation syntax.** No `tool_name({args})` calls, no MCP tool names, no skill IDs, no slash commands in the plan body. If a step needs a concrete command, use a shell command (`git diff --staged`, `grep -r "X"`) or describe the intent ("map direct dependents before editing").
+- **No references to "the agent", "the assistant", "Claude", "the LLM", or first-person "I" / "we will".** Use the imperative: "Add a checkbox to…", "Extend the payload with…".
+- **Link to code, not to prior conversations or tool outputs.** Use relative links to files with `#L<line>` anchors when citing specific code.
+- **If AI assistance was used to author the plan, that belongs in the commit message or PR description — not inside the plan document.**
+
+A reader picking up the plan six months from now should not be able to tell whether a human or a tool wrote it.
+
 ---
 
 ### Document header
@@ -137,6 +150,19 @@ Skip the diagram when the feature is a single-file change or a config update wit
 #### §1.3 What does NOT change
 
 One paragraph or bullet list stating what existing behavior is explicitly preserved. This gives reviewers confidence about blast radius.
+
+#### §1.4 UX Changes — Before & After
+
+Include this subsection when the feature changes any user-facing surface: URL routes, UI components, modal contents, form layouts, screens, emails, or any other output a human sees. Compare the state **before** to the state **after**, in that order.
+
+Required contents when included:
+
+- **Per-surface comparison** — one table per affected surface (URL route, operator modal, end-user page, email, etc.) with `Before` and `After` columns. Keep rows short and scannable; mark any newly-introduced items explicitly.
+- **Before flow diagram** — a mermaid flowchart depicting today's actual user journey (operator action → user action → completion). Use `subgraph` to group steps by actor so the diagram reads left-to-right as a timeline. The Before flow must reflect verified current behavior, not an idealized version.
+- **After flow diagram** — a mermaid flowchart depicting the new user journey. Mirror the same actor groupings as the Before diagram so readers can visually diff the two.
+- **Key deltas** — a numbered list summarizing what actually changed between Before and After. One line per delta (URL rename, new form field, new email block, etc.).
+
+Omit this subsection when the feature is server-only with no user-visible output change (internal refactor, background job, data-format migration with no UI surface).
 
 ---
 
@@ -344,6 +370,9 @@ Bulleted list: what must pass before the feature goes live.
 - [ ] Pre-flight table marks already-completed items as ✅ (not all ⬜)
 - [ ] No phase refers to "extend the X layer" without naming the actual file and method
 - [ ] Flow diagram is included if the feature spans multiple systems, omitted if single-file
+- [ ] §1.4 UX Changes is included if the feature changes any user-facing surface; when included, it has a per-surface comparison **plus** a Before flow diagram **and** an After flow diagram (both present, not one)
+- [ ] No agent/tool traces in the plan — no `tool_name({args})` syntax, no MCP tool names, no references to "the agent" / "the assistant" / "Claude" / "the LLM", no first-person "I" / "we will"
+- [ ] Verification steps use human-readable commands (`git diff`, `grep`) or outcome descriptions ("map upstream callers"), never AI-tool invocations
 
 ---
 
