@@ -18,6 +18,8 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
 | [repo-overview](./packages/skills/repo-overview) | Quickly understand an unfamiliar repository, monorepo, or microservice codeba... |
 | [tech-explain](./packages/skills/tech-explain) | Explain unfamiliar technologies with a concise framework. Use when the user a... |
+| [wireframe-excalidraw](./packages/skills/wireframe-excalidraw) | Turn a markdown brief, screen description, or feature spec into a hand-drawn-... |
+| [wireframe-wire-dsl](./packages/skills/wireframe-wire-dsl) | Turn a markdown brief, screen description, or feature spec into a wire-dsl `.... |
 <!-- END:Available-Skills -->
 
 ## Installation

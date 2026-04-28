@@ -31,7 +31,8 @@
       "name": "implementation-plan",
       "description": "Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, flow diagram, per-phase file targets, and a testing strategy. Language and framework agnostic.",
       "files": [
-        "SKILL.md"
+        "SKILL.md",
+        "tests/cases.md"
       ]
     },
     {
@@ -70,23 +71,8 @@
       ]
     },
     {
-      "name": "wireframe-wire-dsl",
-      "description": "Turn a markdown brief, screen description, or feature spec into a wire-dsl `.wire` wireframe and render it to SVG/PDF/PNG via the local `wire` CLI. Use when the user asks for a wire-dsl wireframe specifically, OR when they want a deterministic text-based wireframe DSL with multi-format export (SVG/PDF/PNG). For a hand-drawn-looking, edit-in-browser alternative, see `wireframe-excalidraw`.",
-      "files": [
-        "SKILL.md",
-        "cases/01-ecommerce-checkout.md",
-        "cases/02-saas-admin.md",
-        "cases/03-branching-wizard.md",
-        "cases/README.md",
-        "references/components.md",
-        "references/dsl-cheatsheet.md",
-        "references/patterns.md",
-        "references/troubleshooting.md"
-      ]
-    },
-    {
       "name": "wireframe-excalidraw",
-      "description": "Turn a markdown brief into a hand-drawn-looking wireframe by generating an `.excalidraw` scene file via a small Node.js script. Use when the user wants a low-fi sketchy wireframe they can open and edit in Excalidraw, or asks for a 'sketch', 'hand-drawn mockup', or 'Excalidraw wireframe'. For a deterministic DSL with SVG/PDF export, see `wireframe-wire-dsl`.",
+      "description": "Turn a markdown brief, screen description, or feature spec into a hand-drawn-looking wireframe by generating an `.excalidraw` scene file via a small Node.js script. Use when the user wants a low-fi sketchy wireframe they can open and edit in Excalidraw (excalidraw.com or the desktop app), or asks for a \"sketch\", \"hand-drawn mockup\", or \"Excalidraw wireframe\". For a deterministic DSL with SVG/PDF export instead, see the sibling skill `wireframe-wire-dsl`.",
       "files": [
         "SKILL.md",
         "cases/01-multi-screen-flow.md",
@@ -96,6 +82,21 @@
         "references/cheatsheet.md",
         "references/components.md",
         "references/helpers.mjs",
+        "references/patterns.md",
+        "references/troubleshooting.md"
+      ]
+    },
+    {
+      "name": "wireframe-wire-dsl",
+      "description": "Turn a markdown brief, screen description, or feature spec into a wire-dsl `.wire` wireframe and render it to SVG/PDF/PNG via the local `wire` CLI. Use when the user asks for a wire-dsl wireframe specifically, OR when they want a deterministic text-based wireframe DSL with multi-format export (SVG/PDF/PNG). For a hand-drawn-looking, edit-in-browser alternative, see the sibling skill `wireframe-excalidraw`.",
+      "files": [
+        "SKILL.md",
+        "cases/01-ecommerce-checkout.md",
+        "cases/02-saas-admin.md",
+        "cases/03-branching-wizard.md",
+        "cases/README.md",
+        "references/components.md",
+        "references/dsl-cheatsheet.md",
         "references/patterns.md",
         "references/troubleshooting.md"
       ]

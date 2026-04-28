@@ -92,6 +92,22 @@
         "alternatives",
         "real-life reference"
       ]
+    },
+    {
+      "name": "wireframe-excalidraw",
+      "description": "Turn a markdown brief, screen description, or feature spec into a hand-drawn-looking wireframe by generating an `.excalidraw` scene file via a small Node.js script. Use when the user wants a low-fi sketchy wireframe they can open and edit in Excalidraw (excalidraw.com or the desktop app), or asks for a \"sketch\", \"hand-drawn mockup\", or \"Excalidraw wireframe\". For a deterministic DSL with SVG/PDF export instead, see the sibling skill `wireframe-wire-dsl`.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wireframe-excalidraw",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wireframe-wire-dsl",
+      "description": "Turn a markdown brief, screen description, or feature spec into a wire-dsl `.wire` wireframe and render it to SVG/PDF/PNG via the local `wire` CLI. Use when the user asks for a wire-dsl wireframe specifically, OR when they want a deterministic text-based wireframe DSL with multi-format export (SVG/PDF/PNG). For a hand-drawn-looking, edit-in-browser alternative, see the sibling skill `wireframe-excalidraw`.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wireframe-wire-dsl",
+      "license": "MIT",
+      "keywords": []
     }
   ]
 }
