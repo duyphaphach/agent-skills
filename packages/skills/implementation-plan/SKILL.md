@@ -68,27 +68,27 @@ Find existing test files, fixtures, or harness views. Note what can be reused vs
 
 ## Step 2 — Identify concerns before writing the plan
 
-Before drafting phases, surface gaps between what the plan assumes and what the code actually shows. Each concern goes into **§4 Concerns & Open Questions** in the output.
+Before drafting phases, surface gaps between what the plan assumes and what the code actually shows. Each concern goes into **§2 Concerns & Open Questions** in the output.
 
-For each concern capture:
+§2 holds two related kinds of items, both written with the same template: **open questions** the plan needs answered, and **resolved design decisions** that are non-obvious or counter-intuitive enough to warrant recording (so a future reader doesn't re-litigate them). For each, capture:
 
 - **Assumption vs. reality** — what the plan needs vs. what the code shows
-- **Severity** — Blocker (must resolve first) or Design decision (can be deferred)
-- **Blocks** — which phase(s) cannot proceed until this is resolved (e.g. "Blocks: Phase 3" or "Affects: Phase 2, Phase 4")
+- **Severity** — Blocker (must resolve first), Design decision (can be deferred), or Design decision *(resolved)* with the chosen path inline
+- **Blocks** — which phase(s) cannot proceed until this is resolved (e.g. "Blocks: Phase 3" or "Affects: Phase 2, Phase 4"); use "None — recorded for future reference" for already-resolved items
 
 Common concern categories:
 
 | Category | What to look for |
 |----------|-----------------|
 | Missing abstraction | Plan names a "layer" or "service" that does not exist yet |
-| Schema gap | New data must be stored but no column, field, or table exists |
-| Data migration / backfill | New column or field requires populating existing rows; ordering, defaults, or downtime windows constrain the rollout |
+| Schema gap / migration | New data must be stored but no column, field, or table exists; or new column needs backfill with ordering/downtime constraints |
 | No unique identifier | The new integration returns no unique key — deduplication logic will always create new records |
-| Legal / compliance | Data fields that may require approval before storage (PII, financial data, etc.) |
-| Pre-flight dependency | An out-of-band credential, agreement, or registration must be obtained before the code can be tested |
-| Wiring mechanism | Integration requires a specific parameter or URL construction detail that is undocumented |
+| Legal / compliance gate | Data fields require approval before storage (PII, financial data); legal sign-off needed before going live |
+| External credential | An out-of-band cert, API key, agreement, or registration must be obtained before the code can be tested |
+| UI gate | A UI component or partial must exist before the flow can be wired, or must render correctly under more than one layout |
+| Wiring / protocol detail | Integration requires a specific parameter, URL construction, non-standard flow step, or signature scheme that is undocumented |
 | Ordering conflict | Two blockers are independent but both must clear before a later phase can run |
-| Contract divergence | Existing interface or callback format will change in a way that affects callers |
+| Contract divergence | Existing interface, callback shape, event taxonomy, or webhook payload will change in a way that affects callers |
 
 ---
 
@@ -104,7 +104,7 @@ Plans are reviewed by engineers, product managers, and operators. Write them as 
 - **No tool-invocation syntax.** No `tool_name({args})` calls, no MCP tool names, no skill IDs, no slash commands in the plan body. If a step needs a concrete command, use a shell command (`git diff --staged`, `grep -r "X"`) or describe the intent ("map direct dependents before editing").
 - **No references to "the agent", "the assistant", "Claude", "the LLM", or first-person "I" / "we will".** Use the imperative: "Add a checkbox to…", "Extend the payload with…".
 - **Link to code, not to prior conversations or tool outputs.** Use relative links to files with `#L<line>` anchors when citing specific code.
-- **If AI assistance was used to author the plan, that belongs in the commit message or PR description — not inside the plan document.**
+- **Don't paraphrase what a diagram, table, or code sample already shows.** If §1.2 or §1.3 carries a sequence diagram, don't transcribe its steps in prose underneath. Captions and key-deltas lists call out *what changed and why* — they aren't a line-by-line restatement of every arrow. Same rule applies to per-task code samples in §3: the artefact carries the facts, the prose carries the rationale.
 
 A reader picking up the plan six months from now should not be able to tell whether a human or a tool wrote it.
 
@@ -132,122 +132,51 @@ Three subsections.
 
 Numbered list of concrete deliverables. Each item should be verifiable — not "improve auth" but "add Signicat as an authentication provider for BankID Norway and Sweden."
 
-#### §1.2 Flow Overview
+#### §1.2 Implementation Sequence
 
-One paragraph describing how the feature works end to end. Then include a **mermaid sequence diagram** when the feature involves:
+A mermaid `sequenceDiagram` showing where in the code each step of the flow happens — controllers, services, models, external systems. Label participants by **implementation class or service** (`IndividualController`, `DocumentController`, `AmlSelfDeclarationService`, `ClientAnswers`, `Webhook receiver`) so engineers can map each arrow to a concrete file. This is the implementer's reference; the role-level abstracted view belongs in §1.3.
 
-- Multiple systems or services communicating
-- User-visible redirects or multi-step interactions
-- Branching logic based on input (e.g., different providers, different user types)
+Show post-completion side-effects (compliance log writes, webhook delivery, operator email) as their own arrows to distinct participants — not collapsed into a single arrow back to the operator.
 
-Always use a `sequenceDiagram` for this section — it captures request/response order between participants. Label participants by role, not implementation detail (e.g., "Browser", "Auth Provider", not "CurlHelper").
+Skip for single-file or config-only changes.
 
-Skip the diagram when the feature is a single-file change or a config update with no multi-system interaction.
+#### §1.3 UX Changes
 
-#### §1.3 UX Changes — Before & After
+Include this subsection when the feature changes any user-facing interaction (URL routes, UI components, modal contents, form layouts, screens, emails, sent messages). Omit when the feature is server-only with no user-visible output change (internal refactor, background job, data-format migration with no UI surface).
 
-Include this subsection when the feature changes any user-facing surface (URL routes, UI components, modal contents, form layouts, screens, emails). Omit when the feature is server-only with no user-visible output change (internal refactor, background job, data-format migration with no UI surface).
-
-Compare the state **before** to the state **after**, in that order.
-
-Terms used below:
-
-- **Surface** — any user-visible artefact (page, modal, email, route, config key, error message)
-- **Pane** — one fenced wireframe block representing one surface in one state (Before or After)
-- **Frame** — Excalidraw's term for a containing rectangle on its canvas; in Wire DSL the equivalent is a top-level `screen`
+Show the delta as a single mermaid `sequenceDiagram` with color-highlighted regions for the parts that change. Where §1.2 names the actual classes, §1.3 abstracts to **roles** (`User`, `Browser`, `Server`, `Webhook receiver`) so reviewers focus on what's different from the user's perspective, not the call graph.
 
 ##### §1.3.1 Required contents
 
-- **Screen-level surfaces use a wireframe DSL** — for any modal, form, page, screen, or email whose layout or content changes, depict Before and After with a wireframe DSL block (one fenced block per state). DSL is preferred over prose tables because it renders as an actual visual mockup, so reviewers see the change instead of reconstructing it from descriptions. Keep snippets focused on the diffed region — a full screen is fine for a small page, but for a large dashboard show only the affected section.
-  - **Default tool: Wire DSL** (` ```wire ` blocks). Use it unless the user explicitly asks for the alternative.
-  - **Alternative: Excalidraw** (` ```excalidraw ` blocks or linked `.excalidraw` files). Pick this when the user requests it or when the change is sketch-like (annotations, arrows, free-form callouts) rather than a structured component layout.
-  - **Syntax lives in a sibling skill.** This plan only declares the choice and embeds the snippet — the chosen wireframing skill (Wire DSL or Excalidraw) owns the grammar. Before drafting §1.3, confirm one such skill is available in the project; if neither is, fall back to the table form below for that surface and note the gap.
-- **Narrow comparisons stay as tables** — for surfaces that have no spatial layout (URL route renames, config keys, email subject lines, API field renames), use a two-column `Before` / `After` table. Don't force these into a wireframe DSL.
-- **Hybrid surfaces — split between the two formats.** When a single surface has both spatial and non-spatial deltas (e.g., an email whose subject line *and* body layout both change), use a wireframe block for the spatial part (the body) and a table immediately below it for the layoutless part (subject, sender, headers). Don't force one tool to cover both.
-- **Before user flow diagram** — a mermaid user flow diagram depicting today's actual user journey (operator action → user action → completion). Use `subgraph` to group steps by actor so the diagram reads left-to-right as a timeline. The Before flow must reflect verified current behavior, not an idealized version. Required whenever §1.3 is included, even when §1.2's `sequenceDiagram` is skipped.
-- **After user flow diagram** — a mermaid user flow diagram depicting the new user journey. Mirror the same actor groupings as the Before diagram so readers can visually diff the two.
-- **Key deltas** — a numbered list summarizing what actually changed between Before and After. One line per delta (URL rename, new form field, new email block, etc.). Reference each delta by its step number from §1.3.2 below.
+- **One mermaid `sequenceDiagram`** covering the user-facing flow end-to-end. Use `rect rgb(...)` blocks to highlight only the messages that change:
+  - Added — `rect rgb(220, 245, 220)` (green tint)
+  - Modified — `rect rgb(255, 245, 200)` (yellow tint)
+  - Removed — `rect rgb(255, 220, 220)` (red tint), with the message label wrapped in `~~ ~~`
+- **Abstract anything that doesn't change.** Collapse unchanged validation, persistence, side effects, and unchanged UX steps into a single neutral `Note over <participant>: <summary> (unchanged)`. Don't redraw stable behavior — name it once and move on.
+- **Label participants by role**, not implementation detail (`User`, `Browser`, `Auth Provider`, `Server` — not `CurlHelper`).
+- **Color legend** — one line directly under the diagram when more than one color is used: `> 🟢 added · 🟡 modified · 🔴 removed`.
+- **Key deltas** — a numbered list under the diagram summarizing each highlighted region in the order it appears. One line per delta (URL rename, new form field, removed step, etc.).
+- **Non-interaction renames stay as tables** — for URL route renames, config keys, email subject lines, or API field renames that have no interaction component, add a two-column `Before` / `After` table below the diagram instead of stretching the diagram to cover them.
 
-##### §1.3.2 Wireframe authoring rules
+##### §1.3.2 Diagram authoring rules
 
-A4-portrait constraints — apply to whichever tool is chosen.
+- **One diagram, not two.** Don't ship Before and After diagrams side-by-side. Color regions inside a single timeline carry the delta.
+- **Collapse unchanged steps.** If a step's behavior is identical before and after, replace it with a single `Note over` or omit it. The diagram is a delta view, not a system reference.
+- **Strike removed messages.** Wrap the label of a removed interaction in `~~ ~~` so the deletion stays readable inside the red region.
+- **Keep it printable.** The plan renders inside a document column (≈A4 portrait, ~600px usable). If the diagram needs horizontal scrolling, split it into two scoped diagrams (one per surface) rather than going wide.
+- **No spatial mockups in this section.** Pixel-level layouts belong in design tooling, not in the implementation plan.
 
-- **Vertical layout, top-to-bottom only.** The plan renders inside a document column (≈A4 portrait, ~600px usable). Both the §1.3 layout itself (panes stacked top-to-bottom, never side-by-side) and the contents of each pane (stacked sections, no sidebar+main horizontal split) flow vertically. Use a horizontal split inside a pane only when the horizontal relationship *is* the change being documented, and even then keep the secondary pane narrow. In Wire DSL the outer container is `layout stack(direction: vertical, gap: …, padding: …)`; in Excalidraw, frames stack inside a portrait-aspect canvas.
-- **Step-numbered panes.** Every pane gets its own step number in the order a reader walks through it. For a single surface this is two panes: `### 1. Before — <surface>`, `### 2. After — <surface>`. For a multi-screen flow (operator modal → email → user form → completion), every screen is its own numbered pane in flow order — Before set first, After set second. The pane's step number must appear in three places so they round-trip cleanly: (a) the markdown heading (`### 2. After — DocumentRequired`), (b) the frame/screen identifier inside the wireframe block (`screen Step2_DocumentRequiredAfter { … }` — `Step<N>_` prefix is mandatory, not illustrative), and (c) the §1.3.1 key-deltas list (each delta cites the step it belongs to, e.g., *"Step 2: response textarea added"*).
-- **Grids stay narrow.** At most two columns on narrow surfaces (a stat-card row uses one-up or two-up cells, not four-up). Anything wider becomes unreadable in print.
-- **Vocabulary parity across Before and After.** Don't render the same field as a single-line input in one and a multi-line textarea in the other unless the type itself is the change.
-- **Mark new items inline.** Add a trailing `// new` comment on the component so the delta is scannable without reading both blocks.
-- **Optional: save renderable wireframes** to `docs/wireframes/<feature-name>/<surface>.<ext>` (`.wire` for Wire DSL, `.excalidraw` for Excalidraw) and link them from the plan. Inline blocks are still required in the plan body — links are additive, for stakeholders who want to open the file in the native tool.
+### §2 Concerns & Open Questions
 
----
+> Reviewed <date>. Open items must be resolved before or during implementation; resolved design decisions are recorded so future readers don't re-open them.
 
-### §2 Current State
-
-*Snapshot as of <date>.*
-
-#### §2.1 What is already in place
-
-| Component | Status |
-|-----------|--------|
-| `<ClassName / function / file>` | Done / Exists / Partial |
-
-#### §2.2 Status per work item
-
-| # | Item | Key / Selector | Status |
-|---|------|----------------|--------|
-| 1 | ... | `key` | ✅ Done |
-| 2 | ... | `key` | ⬜ Not started |
-
----
-
-### §3 Per-item Reference
-
-One `###` per new item (provider, endpoint, feature flag, etc.) with a quick-reference table:
-
-```markdown
-### <Item Name>
-
-| Field | Value |
-|-------|-------|
-| Key / Selector | `value` |
-| Adapter / Class | `ClassName` |
-| Key data fields | `field1`, `field2` |
-| Unique identifier returned | Yes / No — describe |
-| Special requirements | None / describe |
-| Use case | One sentence |
-```
-
-Omit this section when the feature adds only one item *and* §6 phases already name that item by its key/selector — duplicating the fields here adds no information.
-
----
-
-### §4 Concerns & Open Questions
-
-> Reviewed <date>. These must be resolved before or during implementation.
-
-One `###` per concern, labelled `C1`, `C2`, etc. Use the field structure from Step 2 above (Assumption vs. reality, Severity, Blocks).
+One `###` per item, labelled `C1`, `C2`, etc. Use the field structure from Step 2 above (Assumption vs. reality, Severity, Blocks). This section holds both open questions and **resolved design decisions** that are non-obvious — protocol quirks the plan keeps as-is, contract divergences the plan accepts, schema migrations the plan requires, legal/credential gates the plan depends on. If a resolved decision later affects review (a reviewer asks "why isn't X unified with Y?" or "does this need legal sign-off?"), it should be findable here. Note which phase each item gates.
 
 If none found: *"No concerns identified."*
 
 ---
 
-### §5 Special Cases
-
-One `###` per special case that does not fit neatly into a phase:
-
-- **Schema change** — a migration is required before data can be stored
-- **UI gate** — a UI component must exist before the flow can be wired
-- **Legal gate** — approval must be obtained before the feature can go live
-- **External credential** — a certificate, key, or agreement must be in place
-- **Protocol quirk** — a non-standard flow step required by the integration
-
-**Legal gate** and **External credential** entries here typically require a corresponding row in §8.1 Pre-flight; cross-reference both sides so the gate appears exactly once on each.
-
-Omit this section if there are no special cases.
-
----
-
-### §6 Implementation Phases
+### §3 Implementation Phases
 
 #### Phase ordering principles
 
@@ -261,55 +190,55 @@ Order phases by dependency, not by perceived importance:
 
 State ordering dependencies explicitly at the top of any phase that depends on a prior one: *"Requires: Phase 1 complete."*
 
-Each phase must name the actual files and methods/functions it changes. Vague descriptions ("extend the X layer", "update the auth service") are not acceptable — the **Files** list and the **Details** bullets together must identify exactly *which symbol* in *which file* is being changed.
+Each phase must name the actual files and methods/functions it changes. Vague descriptions ("extend the X layer", "update the auth service") are not acceptable — the **Files** list and the **Details** items together must identify exactly *which symbol* in *which file* is being changed.
 
 #### Phase template
 
 One `###` per phase:
 
-```markdown
+````markdown
 ### Phase N — <Title>
 
 > Requires: Phase M complete. (omit if no dependency)
 
-**Files**
+#### Files
 
 - [`path/to/file`](../path/to/file)
 
-**Objective**
+#### Objective
 
-One sentence.
+One sentence. If the phase has multiple distinct objectives, use a numbered list — one objective per line, in the order they apply:
 
-**Details**
+1. First objective.
+2. Second objective.
 
-- Bullet list of what changes and why
+#### Details
 
-**Cross-refs** (omit if none apply)
+A numbered checklist of the work in this phase. Each task names what changes and why and carries a stable per-phase ID via the `**N.**` prefix so concerns, code reviews, and PR descriptions can cite tasks as `Phase <P>, task <N>`. Most tasks stand alone as a checkbox line — add a fenced code sample only when the task pins down an interface or structure that multiple call sites must agree on.
 
-- Implements §3 item: `<item-name>`
-- Closes §4 concern: `C<n>`
+- [ ] **1.** <Task 1 — what changes and why>
+- [ ] **2.** <Task 2 — what changes and why>
+- [ ] **3.** <Task 3 — defines a new interface or shared structure that downstream tasks depend on>
 
-**Example** (include when the change is non-obvious — see rule below)
+  ```<language>
+  // path/to/file — <function or section>
+  // ... existing code ...
+  <new or modified lines that callers must match>
+  // ... existing code ...
+  ```
 
-\`\`\`<language>
-// Concrete example — not pseudocode
-\`\`\`
+- [ ] **4.** <Task 4 — what changes and why>
+````
 
-**Checklist**
-
-- [ ] Task 1
-- [ ] Task 2
-```
-
-**Example block — include when** the change introduces a new pattern, data shape, or API contract; involves non-trivial logic (branching, normalization, deduplication); or the reviewer would otherwise need external docs to understand the intent. **Omit when** the change is a trivial config addition, doc-only, or mirrors an existing pattern already visible in the codebase.
+**Per-task code sample — include only when** the task pins down an interface, contract, or shared structure that multiple call sites must agree on (a new function signature, a callback shape, a payload schema, a base class). The sample exists to lock the contract so reviewers and downstream task implementers don't drift. **Omit by default** — for routine edits, single-call-site changes, trivial config, or anything where reading the resulting code makes the intent obvious. No sample is the norm; a sample is the exception.
 
 ---
 
-### §7 Testing Strategy
+### §4 Testing Strategy
 
 Define how the implementation will be verified. Organize tests from narrowest scope to widest.
 
-#### §7.1 Unit / adapter-level (optional)
+#### §4.1 Unit / adapter-level (optional)
 
 What to test in isolation — individual functions, helpers, adapters, or service methods. Specify:
 
@@ -317,7 +246,7 @@ What to test in isolation — individual functions, helpers, adapters, or servic
 - Edge cases (empty input, missing fields, malformed data)
 - Error conditions (network failure, invalid credentials, timeout)
 
-#### §7.2 Integration / flow-level (optional)
+#### §4.2 Integration / flow-level (optional)
 
 End-to-end verification of the feature flow. Specify:
 
@@ -325,14 +254,14 @@ End-to-end verification of the feature flow. Specify:
 - What to observe at each step (redirects, stored data, returned values)
 - How to verify the final output matches the contract
 
-#### §7.3 Regression
+#### §4.3 Regression
 
 Existing behavior that must not break. Specify:
 
 - Which existing flows to re-test after the change
 - What "still works" looks like for each
 
-#### §7.4 Failure and edge cases
+#### §4.4 Failure and edge cases
 
 Abnormal conditions to test explicitly:
 
@@ -345,45 +274,19 @@ For each, state the expected behavior (error message, graceful fallback, safe re
 
 ---
 
-### §8 Verification Gates
-
-Three gates ordered by timing — before code starts (§8.1), during QA (§8.2), before release (§8.3).
-
-#### §8.1 Pre-flight
-
-Out-of-band requirements independent of code changes (credentials, agreements, registrations, legal approvals). Items here block §6 phases from starting; cross-reference any concern in §4 that names the same blocker.
-
-| Item | Requirement | Status |
-|------|------------|--------|
-| `<name>` | `<what must happen>` | ⬜ / ✅ / Blocker |
-
-Mark ✅ for items already satisfied. Mark **Blocker** for items that must complete before implementation can proceed. If nothing is required, write: *"No pre-flight requirements."*
-
-#### §8.2 Test-environment run-through
-
-Numbered list: how to run a complete flow in the test/staging environment. Should exercise the integration path validated in §7.2.
-
-#### §8.3 Production gate
-
-Bulleted list: what must pass before the feature goes live (final §7 results, §4 concerns closed, §8.1 items ✅).
-
----
-
 ## Step 4 — Self-check before delivering
 
 Mark each item ✅ if satisfied, ⬜ if not yet, **N/A** if the item's conditional doesn't apply (e.g., §1.3 box on a server-only feature, §1.2 box on a single-file refactor). N/A items pass; only ⬜ items block delivery.
 
-- [ ] §4 addresses every gap found in Step 2 (even if the answer is "no concerns")
-- [ ] Every concern in §4 names which phase(s) it blocks
-- [ ] Every phase names the exact files and methods it touches, with relative links (per §6 — no vague "extend the X layer")
+- [ ] §2 addresses every gap found in Step 2 (even if the answer is "no concerns")
+- [ ] Every concern in §2 names which phase(s) it blocks
+- [ ] Every phase names the exact files and methods it touches, with relative links (per §3 — no vague "extend the X layer")
 - [ ] Phase ordering dependencies are stated explicitly
-- [ ] Each §6 phase that implements a §3 item or closes a §4 concern records it under **Cross-refs** in the phase template
-- [ ] Example blocks follow the include/omit rule at the bottom of §6
-- [ ] §7 Testing Strategy covers unit, integration, regression, and failure cases
-- [ ] §8.1 Pre-flight table marks already-completed items as ✅ (not all ⬜); every §5 Legal-gate / External-credential entry has a matching §8.1 row
+- [ ] Per-task code samples in §3 follow the include/omit rule at the bottom of §3
+- [ ] §4 Testing Strategy covers unit, integration, regression, and failure cases
 - [ ] §1.2 uses a `sequenceDiagram` if the feature spans multiple systems; **N/A** if single-file
 - [ ] §1.3 UX Changes is included when user-facing surfaces change, and complies with §1.3.1 / §1.3.2; **N/A** for server-only features
-- [ ] Every `§N.M` reference in the body resolves to an existing heading (no orphan refs from the renumber)
+- [ ] Every `§N.M` reference in the body resolves to an existing heading (no orphan refs)
 - [ ] Save path declared once at the start of Step 3 and referenced — not restated — at Deliver
 - [ ] No agent/tool traces in the plan (per Step 3 "Writing style")
 
@@ -392,5 +295,5 @@ Mark each item ✅ if satisfied, ⬜ if not yet, **N/A** if the item's condition
 ## Deliver
 
 1. Save the plan to the path defined at the start of Step 3.
-2. Give the user: the file path, a summary of concerns found (C-count and severity, per §4), and the phase count (per §6).
+2. Give the user: the file path, a summary of concerns found (C-count and severity, per §2), and the phase count (per §3).
 3. Ask the user to confirm the concern list before implementation begins.
