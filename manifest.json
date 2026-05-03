@@ -41,7 +41,7 @@
     },
     {
       "name": "implementation-plan",
-      "description": "Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, flow diagram, per-phase file targets, and a testing strategy. Language and framework agnostic.",
+      "description": "Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, diagrams, per-phase file targets, and a testing strategy. Also produces a compact stakeholder variant on request (PM / tech-lead share-out — no concerns section, no agent-facing checklists). Language and framework agnostic.",
       "version": "1.0.0",
       "source": "./packages/skills/implementation-plan",
       "license": "MIT",

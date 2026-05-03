@@ -1,6 +1,6 @@
 ---
 name: implementation-plan
-description: Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, diagrams, per-phase file targets, and a testing strategy. Language and framework agnostic.
+description: Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, diagrams, per-phase file targets, and a testing strategy. Also produces a compact stakeholder variant on request (PM / tech-lead share-out — no concerns section, no agent-facing checklists). Language and framework agnostic.
 allowed-tools:
   - "*"
 ---
@@ -66,6 +66,9 @@ Before drafting phases, surface gaps between what the plan assumes and what the 
 §2 holds two related kinds of items, both written with the same template: **open questions** the plan needs answered, and **resolved design decisions** that are non-obvious or counter-intuitive enough to warrant recording (so a future reader doesn't re-litigate them). For each, capture:
 
 - **Assumption vs. reality** — what the plan needs vs. what the code shows
+- **Why it matters** — the consequence of leaving the gap unresolved (broken contract, data loss, blocked rollout, compliance exposure, etc.). Without this, reviewers can't tell if the item is load-bearing or cosmetic.
+- **Code references** — relative links with `#L<line>` anchors to the files that ground this concern (the symbol, schema, route, or call site under discussion). Anchor every claim in real code; if no code exists yet, link the closest neighbor and say so.
+- **Options to consider** — a short bulleted list of the paths the team could take, each with its trade-off (cost, risk, reversibility) so the decision is auditable. For resolved items, mark the chosen option `→ chosen` and note in one line why the others were rejected.
 - **Severity** — Blocker (must resolve first), Design decision (can be deferred), or Design decision _(resolved)_ with the chosen path inline
 - **Blocks** — which phase(s) cannot proceed until this is resolved (e.g. "Blocks: Phase 3" or "Affects: Phase 2, Phase 4"); use "None — recorded for future reference" for already-resolved items
 
@@ -162,7 +165,7 @@ Reuse the diagram conventions from §1.2 (palette, legend, collapse, key deltas,
 
 > Reviewed <date>. Open items must be resolved before or during implementation; resolved design decisions are recorded so future readers don't re-open them.
 
-One `###` per item, labelled `C1`, `C2`, etc. Use the field structure from Step 2 above (Assumption vs. reality, Severity, Blocks). This section holds both open questions and **resolved design decisions** that are non-obvious — protocol quirks the plan keeps as-is, contract divergences the plan accepts, schema migrations the plan requires, legal/credential gates the plan depends on. If a resolved decision later affects review (a reviewer asks "why isn't X unified with Y?" or "does this need legal sign-off?"), it should be findable here. Note which phase each item gates.
+One `###` per item, labelled `C1`, `C2`, etc. Use the field structure defined in Step 2 above. This section holds both open questions and **resolved design decisions** that are non-obvious — protocol quirks the plan keeps as-is, contract divergences the plan accepts, schema migrations the plan requires, legal/credential gates the plan depends on. If a resolved decision later affects review (a reviewer asks "why isn't X unified with Y?" or "does this need legal sign-off?"), it should be findable here. Note which phase each item gates.
 
 If none found: _"No concerns identified."_
 
@@ -271,6 +274,7 @@ For each, state the expected behavior (error message, graceful fallback, safe re
 Mark each item ✅ if satisfied, ⬜ if not yet, **N/A** if the item's conditional doesn't apply (e.g., §1.3 box on a server-only feature, §1.2 box on a single-file refactor). N/A items pass; only ⬜ items block delivery.
 
 - [ ] §2 addresses every gap found in Step 2 (even if the answer is "no concerns")
+- [ ] Every concern in §2 carries the full field set from Step 2 — including **Why it matters**, **Code references** (with `#L<line>` anchors), and **Options to consider** with trade-offs
 - [ ] Every concern in §2 names which phase(s) it blocks
 - [ ] Every phase names the exact files and methods it touches, with relative links (per §3 — no vague "extend the X layer")
 - [ ] Phase ordering dependencies are stated explicitly
@@ -284,8 +288,64 @@ Mark each item ✅ if satisfied, ⬜ if not yet, **N/A** if the item's condition
 
 ---
 
+## Step 5 — Compact variant for stakeholders (on request)
+
+Trigger when the user asks for a "compact plan", "PM version", "tech-lead summary", "share-out version", or similar. Audience is **project managers and tech leads** — the document reads as a project artifact, not an execution checklist.
+
+Steps 1 and 2 are unchanged: research the codebase and surface concerns. The difference is that **concerns are resolved in conversation with the user and folded into the relevant §1 narrative or phase summary** — the compact document itself has no §2 section.
+
+### Compact output structure
+
+Reuse Step 3's heading template, writing-style rules, and diagram conventions. Only the differences below apply:
+
+| Section in full plan | Compact treatment |
+| --- | --- |
+| §1.1 / §1.2 / §1.3 | Unchanged. Diagrams and key deltas serve both PMs (UX) and tech leads (sequence). |
+| §2 Concerns | **Omit.** Resolutions live inline in §1 or the affected phase summary. |
+| §3 Implementation Phases → §2 in compact | Renumber. Keep the per-phase template intact — title, `Requires:` line, **Files**, **Objective**, **Details** — but raise the granularity:<br>• **Files** may group by directory or module (`src/auth/providers/` — 3 files) rather than listing every path, when the count is high enough that a flat list adds noise.<br>• **Details** is a short bulleted list of 3–7 headline work items per phase, each one line. **Drop** the `- [ ]` checkboxes, the `**N.**` task IDs, and all per-task code samples — those are execution-tracking artifacts, not stakeholder content. |
+| §4 Testing Strategy → §3 in compact | Renumber. **Content unchanged** — render identically to the full plan, including all four sub-headings and their specific test cases. Testing Strategy is the verification contract; both audiences need it at the same fidelity. |
+
+Phase numbers (`Phase 1`, `Phase 2`, …) stay stable so cross-references survive between the full and compact documents.
+
+### Save path
+
+Save to `docs/plans/<feature-name>-plan-compact.md` alongside the full plan when one exists. Both files coexist — engineers reference the full plan, stakeholders reference the compact one.
+
+### Compact self-check
+
+Use Step 4's checks for the sections that do appear, plus:
+
+- [ ] No §2 Concerns section in the document
+- [ ] Per-phase template is intact (Files, Objective, Details) but Details is a short bulleted list — no checkboxes, no `**N.**` task IDs, no per-task code samples
+- [ ] §3 Testing Strategy renders identically to §4 of the full plan (same sub-headings, same specific test cases) when both files exist
+- [ ] Section numbering reflects the dropped §2 (§2 = Phases, §3 = Testing); phase numbers unchanged
+
+---
+
+## Editing an existing plan
+
+Applies whenever the user asks for changes to a plan that already exists on disk (full, compact, or both). Read the file before editing — don't regenerate from memory.
+
+### Sync the compact with the full plan
+
+If both `<feature-name>-plan.md` and `<feature-name>-plan-compact.md` exist, treat them as one document with two views. Any edit that changes scope (objectives, diagrams, phase order/dependencies, files, testing approach, headline phase work) MUST be propagated to both files in the same response. Edits that only touch full-plan-only detail — per-task `**N.**` items, per-task code samples, §2 concern entries — don't need a compact update.
+
+At Deliver, state which files were touched, e.g. _"Updated `…-plan.md` only — per-task detail; compact view unchanged."_ vs. _"Updated both files in lockstep."_
+
+### Double-check for stale references and structural harmony
+
+Before declaring an edit done:
+
+- Re-run Step 4's `§N.M` reference check — renumbering, merging, or splitting sections during an edit is the usual breakage source. Walk every `Requires: Phase M` line and every "Phase N, task K" pointer too.
+- New prose matches the document's existing voice and bullet/table conventions; no new heading style, bullet style, or table format introduced just for the added content.
+- New rules don't restate ones already defined elsewhere in the document — reference the existing source instead of duplicating.
+
+`grep -nE "§|Phase |Requires:" <plan-file>` catches most stale refs in one pass.
+
+---
+
 ## Deliver
 
-1. Save the plan to the path defined at the start of Step 3.
-2. Give the user: the file path, a summary of concerns found (C-count and severity, per §2), and the phase count (per §3).
-3. Ask the user to confirm the concern list before implementation begins.
+1. Save the plan(s) to the path(s) defined in Step 3 — and Step 5 if a compact variant was requested.
+2. Give the user: the file path(s), a summary of concerns found (C-count and severity, per §2), and the phase count.
+3. Ask the user to confirm the concern list before implementation begins. Skip if the output is compact-only — those concerns were resolved in conversation per Step 5.
