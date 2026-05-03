@@ -1,6 +1,6 @@
 ---
 name: implementation-plan
-description: Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, flow diagram, per-phase file targets, and a testing strategy. Language and framework agnostic.
+description: Generate a structured implementation plan for any feature, integration, or refactor. Produces a phased plan with scope, diagrams, per-phase file targets, and a testing strategy. Language and framework agnostic.
 allowed-tools:
   - "*"
 ---
@@ -36,13 +36,6 @@ Before writing the plan, explore the codebase to ground every phase in real file
 
 Find the primary entry point for the feature area (controller action, route handler, CLI command, etc.) and read it.
 
-Search for related symbols by concept:
-
-```
-Grep: "<feature keyword>" across relevant file types
-Glob: "<relevant path pattern>"
-```
-
 ### 1b. Trace the data flow
 
 Map how data moves through the system for the feature area. Identify:
@@ -73,22 +66,22 @@ Before drafting phases, surface gaps between what the plan assumes and what the 
 §2 holds two related kinds of items, both written with the same template: **open questions** the plan needs answered, and **resolved design decisions** that are non-obvious or counter-intuitive enough to warrant recording (so a future reader doesn't re-litigate them). For each, capture:
 
 - **Assumption vs. reality** — what the plan needs vs. what the code shows
-- **Severity** — Blocker (must resolve first), Design decision (can be deferred), or Design decision *(resolved)* with the chosen path inline
+- **Severity** — Blocker (must resolve first), Design decision (can be deferred), or Design decision _(resolved)_ with the chosen path inline
 - **Blocks** — which phase(s) cannot proceed until this is resolved (e.g. "Blocks: Phase 3" or "Affects: Phase 2, Phase 4"); use "None — recorded for future reference" for already-resolved items
 
 Common concern categories:
 
-| Category | What to look for |
-|----------|-----------------|
-| Missing abstraction | Plan names a "layer" or "service" that does not exist yet |
-| Schema gap / migration | New data must be stored but no column, field, or table exists; or new column needs backfill with ordering/downtime constraints |
-| No unique identifier | The new integration returns no unique key — deduplication logic will always create new records |
-| Legal / compliance gate | Data fields require approval before storage (PII, financial data); legal sign-off needed before going live |
-| External credential | An out-of-band cert, API key, agreement, or registration must be obtained before the code can be tested |
-| UI gate | A UI component or partial must exist before the flow can be wired, or must render correctly under more than one layout |
-| Wiring / protocol detail | Integration requires a specific parameter, URL construction, non-standard flow step, or signature scheme that is undocumented |
-| Ordering conflict | Two blockers are independent but both must clear before a later phase can run |
-| Contract divergence | Existing interface, callback shape, event taxonomy, or webhook payload will change in a way that affects callers |
+| Category                 | What to look for                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| Missing abstraction      | Plan names a "layer" or "service" that does not exist yet                                                                      |
+| Schema gap / migration   | New data must be stored but no column, field, or table exists; or new column needs backfill with ordering/downtime constraints |
+| No unique identifier     | The new integration returns no unique key — deduplication logic will always create new records                                 |
+| Legal / compliance gate  | Data fields require approval before storage (PII, financial data); legal sign-off needed before going live                     |
+| External credential      | An out-of-band cert, API key, agreement, or registration must be obtained before the code can be tested                        |
+| UI gate                  | A UI component or partial must exist before the flow can be wired, or must render correctly under more than one layout         |
+| Wiring / protocol detail | Integration requires a specific parameter, URL construction, non-standard flow step, or signature scheme that is undocumented  |
+| Ordering conflict        | Two blockers are independent but both must clear before a later phase can run                                                  |
+| Contract divergence      | Existing interface, callback shape, event taxonomy, or webhook payload will change in a way that affects callers               |
 
 ---
 
@@ -104,7 +97,7 @@ Plans are reviewed by engineers, product managers, and operators. Write them as 
 - **No tool-invocation syntax.** No `tool_name({args})` calls, no MCP tool names, no skill IDs, no slash commands in the plan body. If a step needs a concrete command, use a shell command (`git diff --staged`, `grep -r "X"`) or describe the intent ("map direct dependents before editing").
 - **No references to "the agent", "the assistant", "Claude", "the LLM", or first-person "I" / "we will".** Use the imperative: "Add a checkbox to…", "Extend the payload with…".
 - **Link to code, not to prior conversations or tool outputs.** Use relative links to files with `#L<line>` anchors when citing specific code.
-- **Don't paraphrase what a diagram, table, or code sample already shows.** If §1.2 or §1.3 carries a sequence diagram, don't transcribe its steps in prose underneath. Captions and key-deltas lists call out *what changed and why* — they aren't a line-by-line restatement of every arrow. Same rule applies to per-task code samples in §3: the artefact carries the facts, the prose carries the rationale.
+- **Don't paraphrase what a diagram, table, or code sample already shows.** If §1.2 or §1.3 carries a sequence diagram, don't transcribe its steps in prose underneath. Captions and key-deltas lists call out _what changed and why_ — they aren't a line-by-line restatement of every arrow. Same rule applies to per-task code samples in §3: the artefact carries the facts, the prose carries the rationale.
 
 A reader picking up the plan six months from now should not be able to tell whether a human or a tool wrote it.
 
@@ -132,38 +125,37 @@ Three subsections.
 
 Numbered list of concrete deliverables. Each item should be verifiable — not "improve auth" but "add Signicat as an authentication provider for BankID Norway and Sweden."
 
-#### §1.2 Implementation Sequence
+#### §1.2 Implementation Overview
 
 A mermaid `sequenceDiagram` showing where in the code each step of the flow happens — controllers, services, models, external systems. Label participants by **implementation class or service** (`IndividualController`, `DocumentController`, `AmlSelfDeclarationService`, `ClientAnswers`, `Webhook receiver`) so engineers can map each arrow to a concrete file. This is the implementer's reference; the role-level abstracted view belongs in §1.3.
 
 Show post-completion side-effects (compliance log writes, webhook delivery, operator email) as their own arrows to distinct participants — not collapsed into a single arrow back to the operator.
 
+This diagram is a **delta view at the implementation level** — color-highlight only the code paths that change, and abstract the rest. §1.3 reuses the same conventions at the role level; the rules below apply to both diagrams.
+
+- **Color regions** with `rect rgb(...)` blocks:
+  - Added — `rect rgb(220, 245, 220)` (green tint)
+  - Modified — `rect rgb(255, 245, 200)` (yellow tint)
+  - Removed — `rect rgb(255, 220, 220)` (red tint), with the message label wrapped in `~~ ~~`
+- **Color legend** — one line directly under the diagram when more than one color is used: `> 🟢 added · 🟡 modified · 🔴 removed`.
+- **Collapse unchanged steps** into a single `Note over <participant>: <summary> (unchanged)`. Don't redraw stable behavior — name it once and move on.
+- **Key deltas** — a numbered list under the diagram summarizing each highlighted region in the order it appears (one line per delta: new call, changed signature, removed step, etc.).
+- **One diagram, not two.** No Before/After side-by-side — colors carry the delta inside a single timeline.
+- **Keep it printable.** Plans render inside a document column (≈A4 portrait, ~600px usable). If the diagram needs horizontal scrolling, split it into two scoped diagrams (one per surface) rather than going wide.
+
+If the feature is purely additive (no existing flow being modified), the whole diagram is implicitly "added" — omit the rects and the legend.
+
 Skip for single-file or config-only changes.
 
 #### §1.3 UX Changes
 
-Include this subsection when the feature changes any user-facing interaction (URL routes, UI components, modal contents, form layouts, screens, emails, sent messages). Omit when the feature is server-only with no user-visible output change (internal refactor, background job, data-format migration with no UI surface).
+Include this subsection when the feature changes any user-facing interaction (URL routes, UI components, modal contents, form layouts, screens, emails, sent messages, notifications). Omit when the feature is server-only with no user-visible output change (internal refactor, background job, data-format migration with no UI surface).
 
-Show the delta as a single mermaid `sequenceDiagram` with color-highlighted regions for the parts that change. Where §1.2 names the actual classes, §1.3 abstracts to **roles** (`User`, `Browser`, `Server`, `Webhook receiver`) so reviewers focus on what's different from the user's perspective, not the call graph.
+Reuse the diagram conventions from §1.2 (palette, legend, collapse, key deltas, one-diagram-only, printable). The rules below add only what's specific to UX-level diagrams.
 
-##### §1.3.1 Required contents
-
-- **One mermaid `sequenceDiagram`** covering the user-facing flow end-to-end. Use `rect rgb(...)` blocks to highlight only the messages that change:
-  - Added — `rect rgb(220, 245, 220)` (green tint)
-  - Modified — `rect rgb(255, 245, 200)` (yellow tint)
-  - Removed — `rect rgb(255, 220, 220)` (red tint), with the message label wrapped in `~~ ~~`
-- **Abstract anything that doesn't change.** Collapse unchanged validation, persistence, side effects, and unchanged UX steps into a single neutral `Note over <participant>: <summary> (unchanged)`. Don't redraw stable behavior — name it once and move on.
-- **Label participants by role**, not implementation detail (`User`, `Browser`, `Auth Provider`, `Server` — not `CurlHelper`).
-- **Color legend** — one line directly under the diagram when more than one color is used: `> 🟢 added · 🟡 modified · 🔴 removed`.
-- **Key deltas** — a numbered list under the diagram summarizing each highlighted region in the order it appears. One line per delta (URL rename, new form field, removed step, etc.).
+- **One mermaid `sequenceDiagram`** covering the user-facing flow end-to-end.
+- **Label participants by role**, not implementation detail (`User`, `Browser`, `Auth Provider`, `Server` — not `CurlHelper`). Where §1.2 names the actual classes, §1.3 abstracts to roles so reviewers focus on what's different from the user's perspective, not the call graph.
 - **Non-interaction renames stay as tables** — for URL route renames, config keys, email subject lines, or API field renames that have no interaction component, add a two-column `Before` / `After` table below the diagram instead of stretching the diagram to cover them.
-
-##### §1.3.2 Diagram authoring rules
-
-- **One diagram, not two.** Don't ship Before and After diagrams side-by-side. Color regions inside a single timeline carry the delta.
-- **Collapse unchanged steps.** If a step's behavior is identical before and after, replace it with a single `Note over` or omit it. The diagram is a delta view, not a system reference.
-- **Strike removed messages.** Wrap the label of a removed interaction in `~~ ~~` so the deletion stays readable inside the red region.
-- **Keep it printable.** The plan renders inside a document column (≈A4 portrait, ~600px usable). If the diagram needs horizontal scrolling, split it into two scoped diagrams (one per surface) rather than going wide.
 - **No spatial mockups in this section.** Pixel-level layouts belong in design tooling, not in the implementation plan.
 
 ### §2 Concerns & Open Questions
@@ -172,7 +164,7 @@ Show the delta as a single mermaid `sequenceDiagram` with color-highlighted regi
 
 One `###` per item, labelled `C1`, `C2`, etc. Use the field structure from Step 2 above (Assumption vs. reality, Severity, Blocks). This section holds both open questions and **resolved design decisions** that are non-obvious — protocol quirks the plan keeps as-is, contract divergences the plan accepts, schema migrations the plan requires, legal/credential gates the plan depends on. If a resolved decision later affects review (a reviewer asks "why isn't X unified with Y?" or "does this need legal sign-off?"), it should be findable here. Note which phase each item gates.
 
-If none found: *"No concerns identified."*
+If none found: _"No concerns identified."_
 
 ---
 
@@ -188,9 +180,9 @@ Order phases by dependency, not by perceived importance:
 4. **Independent phases can be parallelized** — note this explicitly when two phases have no dependency
 5. **Refactors split into extract → adapt callers → delete old**, in that order. Combining "extract new" and "delete old" into one phase removes the rollback point.
 
-State ordering dependencies explicitly at the top of any phase that depends on a prior one: *"Requires: Phase 1 complete."*
+State ordering dependencies explicitly at the top of any phase that depends on a prior one: _"Requires: Phase 1 complete."_
 
-Each phase must name the actual files and methods/functions it changes. Vague descriptions ("extend the X layer", "update the auth service") are not acceptable — the **Files** list and the **Details** items together must identify exactly *which symbol* in *which file* is being changed.
+Each phase must name the actual files and methods/functions it changes. Vague descriptions ("extend the X layer", "update the auth service") are not acceptable — the **Files** list and the **Details** items together must identify exactly _which symbol_ in _which file_ is being changed.
 
 #### Phase template
 
@@ -284,8 +276,8 @@ Mark each item ✅ if satisfied, ⬜ if not yet, **N/A** if the item's condition
 - [ ] Phase ordering dependencies are stated explicitly
 - [ ] Per-task code samples in §3 follow the include/omit rule at the bottom of §3
 - [ ] §4 Testing Strategy covers unit, integration, regression, and failure cases
-- [ ] §1.2 uses a `sequenceDiagram` if the feature spans multiple systems; **N/A** if single-file
-- [ ] §1.3 UX Changes is included when user-facing surfaces change, and complies with §1.3.1 / §1.3.2; **N/A** for server-only features
+- [ ] §1.2 uses a `sequenceDiagram` if the feature spans multiple systems, and color-highlights the changed code paths using the palette defined in §1.2; **N/A** if single-file or purely additive
+- [ ] §1.3 UX Changes is included when user-facing surfaces change and reuses §1.2's diagram conventions (palette, legend, collapse, key deltas, one-diagram-only, printable); **N/A** for server-only features
 - [ ] Every `§N.M` reference in the body resolves to an existing heading (no orphan refs)
 - [ ] Save path declared once at the start of Step 3 and referenced — not restated — at Deliver
 - [ ] No agent/tool traces in the plan (per Step 3 "Writing style")
