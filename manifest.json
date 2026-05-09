@@ -24,6 +24,14 @@
       "keywords": []
     },
     {
+      "name": "code-review-and-quality",
+      "description": "Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.",
+      "version": "1.0.0",
+      "source": "./packages/skills/code-review-and-quality",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
       "name": "frontend-refactoring",
       "description": "Use when the user wants to migrate templates to the new design system convention without breaking behavior or visuals. Examples: \"Refactor this template\", \"Migrate this view to the new convention\", \"Clean up these class names\", \"Extract this pattern to a partial\", \"Replace repeated HTML with a loop\"",
       "version": "1.0.0",
