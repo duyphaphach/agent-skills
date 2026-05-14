@@ -77,7 +77,7 @@
     },
     {
       "name": "refine-prose",
-      "description": "Refines prose to plain spoken English plus real technical terms, and strips AI-trace marks like em dashes and smart quotes. Use when the user asks to refine, simplify, plain-language, or clean up a document, README, comment block, or chunk of text, or to remove em dashes, smart quotes, or curly punctuation. Trigger with \"refine this\", \"make this plainer\", \"plain English pass\", \"strip em dashes\".",
+      "description": "Refines writing into plain, spoken English and strips AI-trace marks (em dashes, smart quotes, curly punctuation, odd unicode spaces). You MUST use this skill before sending any drafted message to the user and before finishing any document, README, or code comment, not only when explicitly asked. Also triggers on \"refine this\", \"make this plainer\", \"plain English pass\", or \"strip em dashes\".",
       "version": "1.0.0",
       "source": "./packages/skills/refine-prose",
       "license": "MIT",
@@ -92,8 +92,7 @@
         "smart-quotes",
         "ai-detection",
         "refine",
-        "gate",
-        "loop"
+        "gate"
       ]
     },
     {
