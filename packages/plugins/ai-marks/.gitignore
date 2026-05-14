@@ -1,0 +1,24 @@
+# Python bytecode and tool caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and OS noise (also covered by the repo-root ignore; kept here so
+# this folder is portable if the plugin is published as a standalone repo).
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Local-only development artifacts
+*.local
+*.bak
+*.orig
+*.tmp

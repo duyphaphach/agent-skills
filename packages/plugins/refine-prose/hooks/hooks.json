@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "refine-prose-validate",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/validate-write.py\"",
             "timeout": 5,
             "statusMessage": "refine-prose: validating write..."
           }
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "refine-prose-lint",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/lint-file.py\"",
             "timeout": 10,
             "statusMessage": "refine-prose: checking common words..."
           }
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "refine-prose-reply-lint",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/lint-reply.py\"",
             "timeout": 15,
             "statusMessage": "refine-prose: checking reply..."
           }

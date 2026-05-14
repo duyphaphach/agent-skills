@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# ai-marks-fix-file: wrapper that invokes the file fixer (PostToolUse hook).
+set -e
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec python3 "$HERE/scripts/fix-file.py" "$@"

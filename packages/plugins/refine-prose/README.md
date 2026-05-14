@@ -180,32 +180,39 @@ sequenceDiagram
 
     Note over Agent: a word was rejected by the linter
 
-    Agent->>Agent: 1. Brainstorm 3 alternative words<br/>or short phrasings
+    Agent->>Agent: 0. Can the word be removed<br/>with no change in meaning?<br/>(fancy words are often filler)
 
-    loop for each alternative
-        Agent->>Linter: 2. echo 'alt' | refine-prose-lint /dev/stdin
-        alt exit 0 (passes)
-            Linter-->>Agent: keep this alternative
-        else exit 2 (also flagged)
-            Linter-->>Agent: drop this alternative
-        end
-    end
-
-    Agent->>Agent: 3. Score each surviving alternative on FIT (1-10)
-    Agent->>Agent: 4. Pick the highest-scoring one
-
-    alt best score >= 9
-        Agent->>Agent: rewrite the sentence with the alternative
+    alt removal works
+        Agent->>Agent: delete the word, sentence reads the same
         Note over Agent: done
-    else no alternative scores 9 or above
-        Agent->>Agent: 5a. Pick a category file
-        Agent->>Validator: 5b. Write to exceptions/<category>.txt
-        alt validator accepts (4 rules pass)
-            Validator-->>FS: append the word
-            Note over Agent: word now allowed for future
-        else validator rejects
-            Validator-->>Agent: stderr with rule violated
-            Note over Agent: go back to step 1
+    else removal loses real information
+        Agent->>Agent: 1. Brainstorm 3 alternative words<br/>or short phrasings
+
+        loop for each alternative
+            Agent->>Linter: 2. echo 'alt' | refine-prose-lint /dev/stdin
+            alt exit 0 (passes)
+                Linter-->>Agent: keep this alternative
+            else exit 2 (also flagged)
+                Linter-->>Agent: drop this alternative
+            end
+        end
+
+        Agent->>Agent: 3. Score each survivor on FIT (1-10)
+        Agent->>Agent: 4. Pick the highest-scoring one
+
+        alt best score >= 9
+            Agent->>Agent: rewrite the sentence with the alternative
+            Note over Agent: done
+        else no alternative scores 9 or above
+            Agent->>Agent: 5a. Pick a category file
+            Agent->>Validator: 5b. Write to exceptions/<category>.txt
+            alt validator accepts (4 rules pass)
+                Validator-->>FS: append the word
+                Note over Agent: word now allowed for future
+            else validator rejects
+                Validator-->>Agent: stderr with rule violated
+                Note over Agent: go back to step 0
+            end
         end
     end
 ```

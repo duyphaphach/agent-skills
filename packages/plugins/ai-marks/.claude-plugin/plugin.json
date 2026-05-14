@@ -1,0 +1,21 @@
+{
+  "name": "ai-marks",
+  "description": "Strips AI-trace characters from files and replies. A PostToolUse hook silently rewrites em dashes, smart quotes, ellipsis, and odd spaces to plain keyboard characters in any file the agent writes. A Stop hook flags the same marks in chat replies and asks for a rewrite.",
+  "version": "0.1.0",
+  "author": {
+    "name": "alexpham",
+    "email": "duyphamle97@gmail.com"
+  },
+  "homepage": "https://github.com/duyphaphach/agent-skills/tree/main/packages/plugins/ai-marks",
+  "repository": "git@github.com:duyphaphach/agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "linter",
+    "hooks",
+    "punctuation",
+    "em-dash",
+    "smart-quotes",
+    "ai-detection",
+    "writing-quality"
+  ]
+}

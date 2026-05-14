@@ -1,0 +1,22 @@
+{
+  "name": "local",
+  "description": "Local marketplace for alex's Claude Code plugins",
+  "owner": {
+    "name": "alexpham",
+    "email": "duyphamle97@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "refine-prose",
+      "source": "./packages/plugins/refine-prose",
+      "description": "Keeps AI output to common spoken English plus real technical terms. Three hooks (PreToolUse, PostToolUse, Stop) enforce an NGSL+NAWL allowlist with a blocklist override and a stem-aware fallback.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "ai-marks",
+      "source": "./packages/plugins/ai-marks",
+      "description": "Strips AI-trace characters from files and replies. A PostToolUse hook silently rewrites em dashes, smart quotes, ellipsis, and odd spaces to plain keyboard characters. A Stop hook flags the same marks in chat replies.",
+      "version": "0.1.0"
+    }
+  ]
+}
