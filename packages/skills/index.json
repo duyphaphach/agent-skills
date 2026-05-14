@@ -64,6 +64,37 @@
       ]
     },
     {
+      "name": "refine-prose",
+      "description": "Refines prose to plain spoken English plus real technical terms, and strips AI-trace marks like em dashes and smart quotes. Use when the user asks to refine, simplify, plain-language, or clean up a document, README, comment block, or chunk of text, or to remove em dashes, smart quotes, or curly punctuation. Trigger with \"refine this\", \"make this plainer\", \"plain English pass\", \"strip em dashes\".",
+      "files": [
+        "SKILL.md",
+        "exceptions/academic-citations.txt",
+        "exceptions/brands.txt",
+        "exceptions/business-abbreviations.txt",
+        "exceptions/days-and-months.txt",
+        "exceptions/file-formats.txt",
+        "exceptions/numbers.txt",
+        "exceptions/ordinals.txt",
+        "exceptions/places.txt",
+        "exceptions/plugin-internal.txt",
+        "exceptions/README.md",
+        "exceptions/regional-spellings.txt",
+        "exceptions/streams.txt",
+        "exceptions/units.txt",
+        "references/decision-process.md",
+        "scripts/__pycache__/_lint_core.cpython-311.pyc",
+        "scripts/__pycache__/_marks.cpython-311.pyc",
+        "scripts/_lint_core.py",
+        "scripts/_marks.py",
+        "scripts/add-exception.py",
+        "scripts/fix-marks.py",
+        "scripts/lint.py",
+        "wordlists/block.txt",
+        "wordlists/ngsl-nawl-combined.txt",
+        "wordlists/tech-terms.txt"
+      ]
+    },
+    {
       "name": "repo-overview",
       "description": "Quickly understand an unfamiliar repository, monorepo, or microservice codebase at a high level. Use when the user asks things like \"explain repo\", \"overview repo\", \"understand this repo\", \"map this codebase\",...",
       "files": [

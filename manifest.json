@@ -76,6 +76,27 @@
       "keywords": []
     },
     {
+      "name": "refine-prose",
+      "description": "Refines prose to plain spoken English plus real technical terms, and strips AI-trace marks like em dashes and smart quotes. Use when the user asks to refine, simplify, plain-language, or clean up a document, README, comment block, or chunk of text, or to remove em dashes, smart quotes, or curly punctuation. Trigger with \"refine this\", \"make this plainer\", \"plain English pass\", \"strip em dashes\".",
+      "version": "1.0.0",
+      "source": "./packages/skills/refine-prose",
+      "license": "MIT",
+      "keywords": [
+        "prose",
+        "writing",
+        "plain-english",
+        "ngsl",
+        "nawl",
+        "linter",
+        "em-dash",
+        "smart-quotes",
+        "ai-detection",
+        "refine",
+        "gate",
+        "loop"
+      ]
+    },
+    {
       "name": "repo-overview",
       "description": "Quickly understand an unfamiliar repository, monorepo, or microservice codebase at a high level. Use when the user asks things like \"explain repo\", \"overview repo\", \"understand this repo\", \"map this codebase\",...",
       "version": "1.0.0",
