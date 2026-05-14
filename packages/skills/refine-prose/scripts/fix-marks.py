@@ -1,94 +1,69 @@
 #!/usr/bin/env python3
 """Step 1 of the refine-prose skill: strip AI-trace marks.
 
-Deterministic. Replaces em dashes, en dashes, smart quotes, ellipsis
-characters, and odd unicode spaces with plain keyboard characters. The same
-input always produces the same output, so this runs once with no fix loop.
+Replaces em dashes, en dashes, smart quotes, ellipsis characters, and odd
+unicode spaces with plain keyboard characters. The same input always gives
+the same output, so this runs once with no fix loop.
 
 Usage:
-  fix-marks.py FILE [FILE ...]   rewrite files in place, report what changed
+  fix-marks.py FILE [FILE ...]   rewrite files in place (run in parallel)
   fix-marks.py -                 read stdin, write fixed text to stdout
 
 Skips, with a note and exit 0:
   - files with the marker `ai-marks: keep` on any line
   - lock files and known binary file extensions
-  - files whose first 4 KB contain a NUL byte
+  - files whose first 4 KB hold a NUL byte
 """
+from __future__ import annotations
+
+import argparse
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _marks import fix, find_marks
+from _marks import count_marks, fix, fix_file
 
-OPT_OUT_MARKER = "ai-marks: keep"
-
-SKIP_SUFFIXES = {
-    ".lock",
-    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf",
-    ".zip", ".tar", ".gz", ".bz2", ".xz", ".7z",
-    ".woff", ".woff2", ".ttf", ".otf", ".eot",
-    ".mp3", ".mp4", ".wav", ".mov", ".avi",
-    ".so", ".dylib", ".dll", ".exe", ".bin",
-}
-
-SKIP_NAMES = {
-    "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "composer.lock",
-    "Pipfile.lock", "poetry.lock", "Cargo.lock", "Gemfile.lock", "uv.lock",
-}
+MAX_WORKERS = 8
 
 
-def is_binary(path):
-    try:
-        with path.open("rb") as f:
-            return b"\x00" in f.read(4096)
-    except OSError:
-        return True
+def _format(result: dict) -> str:
+    path = result["path"]
+    status = result["status"]
+    if status == "fixed":
+        summary = ", ".join(f"{count} {name}" for name, count in result["counts"].items())
+        return f"fixed: {path} ({summary})"
+    if status == "clean":
+        return f"clean: {path}"
+    if status == "skip":
+        return f"skip ({result['reason']}): {path}"
+    return f"error ({result['reason']}): {path}"
 
 
-def fix_file(raw_path):
-    """Fix one file in place. Return a one-line status string."""
-    path = Path(raw_path)
-    if not path.exists() or not path.is_file():
-        return f"skip (not a file): {raw_path}"
-    if path.name in SKIP_NAMES or path.suffix.lower() in SKIP_SUFFIXES:
-        return f"skip (lock or binary type): {raw_path}"
-    if is_binary(path):
-        return f"skip (binary content): {raw_path}"
-    try:
-        original = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
-        return f"skip (unreadable as utf-8): {raw_path}"
-    if OPT_OUT_MARKER in original:
-        return f"skip (ai-marks: keep marker): {raw_path}"
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        prog="fix-marks.py",
+        description="Strip AI-trace marks. Step 1 of the refine-prose skill.",
+    )
+    parser.add_argument("files", nargs="*",
+                        help="files to fix in place; omit or pass - for stdin")
+    args = parser.parse_args()
 
-    cleaned = fix(original)
-    if cleaned == original:
-        return f"clean: {raw_path}"
-
-    names = ", ".join(name for _, name in find_marks(original))
-    try:
-        path.write_text(cleaned, encoding="utf-8")
-    except OSError as e:
-        return f"error (could not write): {raw_path}: {e}"
-    return f"fixed: {raw_path} ({names})"
-
-
-def main():
-    args = [a for a in sys.argv[1:] if a.strip()]
-
-    if not args or args == ["-"]:
+    if not args.files or args.files == ["-"]:
         text = sys.stdin.read()
         sys.stdout.write(fix(text))
-        marks = find_marks(text)
-        if marks:
-            names = ", ".join(name for _, name in marks)
-            print(f"fixed {len(marks)} mark type(s): {names}", file=sys.stderr)
+        counts = count_marks(text)
+        if counts:
+            summary = ", ".join(f"{count} {name}" for name, count in counts.items())
+            print(f"fixed: {summary}", file=sys.stderr)
         else:
             print("clean", file=sys.stderr)
         return 0
 
-    for p in args:
-        print(fix_file(p), file=sys.stderr)
+    workers = min(MAX_WORKERS, len(args.files))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for result in pool.map(fix_file, args.files):
+            print(_format(result), file=sys.stderr)
     return 0
 
 

@@ -1,4 +1,4 @@
-# Words the refine-prose plugin itself uses in its docs and messages.
+# Words the refine-prose skill itself uses in its docs and messages.
 ngsl
 nawl
 gsl
@@ -12,3 +12,7 @@ lint
 stemmer
 plugin
 plugins
+prose
+skill
+skills
+gate

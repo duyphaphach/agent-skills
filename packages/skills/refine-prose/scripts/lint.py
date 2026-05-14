@@ -1,61 +1,123 @@
 #!/usr/bin/env python3
 """Gate for the refine-prose skill.
 
-Lints prose against the NGSL+NAWL common-word set, the real tech-terms list,
-and the exception files. Reports every word that falls outside the set.
+Flags every word outside the common-word set (NGSL + NAWL), the tech-terms
+list, and the exception files. Blocked words are tagged apart from merely
+unknown ones: a blocked word can never become an exception, so it must be
+rewritten.
 
 Usage:
-  lint.py FILE [FILE ...]      lint one or more files
-  lint.py -                    lint raw text from stdin
-  echo "word" | lint.py -      quick-check a single word or phrase
+  lint.py FILE [FILE ...]          lint files (run in parallel)
+  lint.py -                        lint raw text from stdin
+  echo "word" | lint.py -          quick-check one word
+  printf 'a\nb\nc\n' | lint.py -   check several candidates in one run
+  lint.py --json FILE              machine-readable output on stdout
 
 Exit codes:
   0  clean
-  2  at least one word outside the set (listed on stderr), or a file was
-     unreadable
+  2  at least one word outside the set, or a file could not be read
 """
+from __future__ import annotations
+
+import argparse
+import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _lint_core import find_violations
 
-MAX_REPORT = 40
+MAX_WORKERS = 8
 
 
-def lint_text(text, label):
-    """Print violations for one blob of text. Return True if any were found."""
-    issues = find_violations(text)
-    if not issues:
-        return False
-    print(f"refine-prose: {label}: {len(issues)} word(s) outside the set",
-          file=sys.stderr)
-    for line, word in issues[:MAX_REPORT]:
-        print(f"  L{line}: {word}", file=sys.stderr)
-    if len(issues) > MAX_REPORT:
-        print(f"  ... and {len(issues) - MAX_REPORT} more", file=sys.stderr)
-    return True
+def _as_dicts(violations: list[tuple[int, int, str, str]]) -> list[dict]:
+    return [
+        {"line": line, "col": col, "word": word, "kind": kind}
+        for line, col, word, kind in violations
+    ]
 
 
-def main():
-    args = [a for a in sys.argv[1:] if a.strip()]
-    any_issues = False
+def _grade(violations: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Split violations into (failing, proper_nouns). Proper nouns pass."""
+    failing = [v for v in violations if v["kind"] in ("blocked", "unknown")]
+    nouns = [v for v in violations if v["kind"] == "proper-noun"]
+    return failing, nouns
 
-    if not args or args == ["-"]:
-        any_issues = lint_text(sys.stdin.read(), "<stdin>")
+
+def lint_file(path: str) -> dict:
+    """Worker: lint one file. Safe to run in a thread (own file only)."""
+    try:
+        text = Path(path).read_text(errors="replace")
+    except (OSError, ValueError) as error:
+        return {"path": path, "ok": False, "error": str(error), "violations": []}
+    violations = _as_dicts(find_violations(text))
+    failing, _ = _grade(violations)
+    return {"path": path, "ok": not failing, "violations": violations}
+
+
+def lint_stdin() -> dict:
+    violations = _as_dicts(find_violations(sys.stdin.read()))
+    failing, _ = _grade(violations)
+    return {"path": "<stdin>", "ok": not failing, "violations": violations}
+
+
+def report_text(results: list[dict], max_report: int) -> None:
+    for result in results:
+        if result.get("error"):
+            print(f"refine-prose: cannot read {result['path']}: {result['error']}",
+                  file=sys.stderr)
+            continue
+        failing, nouns = _grade(result["violations"])
+        if failing:
+            blocked = sum(1 for v in failing if v["kind"] == "blocked")
+            print(f"refine-prose: {result['path']}: {len(failing)} word(s) "
+                  f"outside the set, {blocked} blocked", file=sys.stderr)
+            for v in failing[:max_report]:
+                tag = "[blocked, must rewrite]" if v["kind"] == "blocked" else "[unknown]"
+                print(f"  L{v['line']}:{v['col']} {v['word']} {tag}", file=sys.stderr)
+            if len(failing) > max_report:
+                print(f"  ... and {len(failing) - max_report} more", file=sys.stderr)
+        else:
+            print(f"refine-prose: clean: {result['path']}", file=sys.stderr)
+        if nouns:
+            names = ", ".join(sorted({v["word"] for v in nouns}))
+            print(f"  treated as proper nouns ({len(nouns)}), confirm these "
+                  f"are names: {names}", file=sys.stderr)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        prog="lint.py",
+        description="Flag words outside the refine-prose common-word set.",
+    )
+    parser.add_argument("files", nargs="*",
+                        help="files to lint; omit or pass - to read stdin")
+    parser.add_argument("--json", action="store_true",
+                        help="machine-readable output on stdout")
+    parser.add_argument("--max-report", type=int, default=40,
+                        help="words listed per file in text mode (default 40)")
+    args = parser.parse_args()
+
+    if not args.files or args.files == ["-"]:
+        results = [lint_stdin()]
     else:
-        for p in args:
-            try:
-                raw = Path(p).read_text(errors="replace")
-            except (FileNotFoundError, IsADirectoryError, PermissionError) as e:
-                print(f"refine-prose: cannot read {p}: {e}", file=sys.stderr)
-                any_issues = True
-                continue
-            if lint_text(raw, p):
-                any_issues = True
+        workers = min(MAX_WORKERS, len(args.files))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            results = list(pool.map(lint_file, args.files))
 
-    if not any_issues:
-        print("refine-prose: clean", file=sys.stderr)
+    any_issues = any(not result["ok"] for result in results)
+
+    if args.json:
+        print(json.dumps(
+            {"status": "issues" if any_issues else "clean", "files": results},
+            indent=2,
+        ))
+    else:
+        report_text(results, args.max_report)
+        if not any_issues:
+            print("refine-prose: clean", file=sys.stderr)
+
     return 2 if any_issues else 0
 
 
