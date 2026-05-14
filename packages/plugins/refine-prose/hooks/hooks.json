@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "refine-prose-validate",
+            "timeout": 5,
+            "statusMessage": "refine-prose: validating write..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "refine-prose-lint",
+            "timeout": 10,
+            "statusMessage": "refine-prose: checking common words..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "refine-prose-reply-lint",
+            "timeout": 15,
+            "statusMessage": "refine-prose: checking reply..."
+          }
+        ]
+      }
+    ]
+  }
+}

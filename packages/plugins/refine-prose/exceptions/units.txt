@@ -1,0 +1,58 @@
+# Units of measurement and common scientific shorthand.
+
+# data sizes
+kb
+mb
+gb
+tb
+pb
+kib
+mib
+gib
+tib
+kbps
+mbps
+gbps
+
+# time
+ms
+us
+ns
+hz
+khz
+mhz
+ghz
+
+# distance
+mm
+cm
+km
+ft
+yd
+mi
+
+# weight and volume
+mg
+kg
+lb
+oz
+ml
+gal
+
+# power and frequency
+kw
+mw
+gw
+hp
+db
+
+# temperature
+celsius
+fahrenheit
+kelvin
+
+# misc
+psi
+rpm
+mph
+kph

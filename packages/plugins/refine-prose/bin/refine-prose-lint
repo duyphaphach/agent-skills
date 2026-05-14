@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# refine-prose-lint: wrapper that invokes the file linter using the plugin's bundled scripts.
+set -e
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec python3 "$HERE/scripts/lint-file.py" "$@"

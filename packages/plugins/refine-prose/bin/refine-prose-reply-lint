@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# refine-prose-reply-lint: wrapper that invokes the reply linter (Stop hook).
+set -e
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec python3 "$HERE/scripts/lint-reply.py" "$@"
