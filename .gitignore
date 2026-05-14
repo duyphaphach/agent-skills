@@ -24,5 +24,9 @@ build/
 .cache/
 .tmp/
 
+# Python
+__pycache__/
+*.pyc
+
 # GitNexus index
 .gitnexus
