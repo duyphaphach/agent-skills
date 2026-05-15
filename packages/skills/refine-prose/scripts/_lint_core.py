@@ -14,7 +14,7 @@ Exceptions load from two places and merge into one EXCEPTIONS set:
 
   - exceptions/*.txt                          categorized files that ship
                                               with the skill.
-  - ~/.claude/refine-prose-exceptions/*.txt   the user's own files, managed
+  - ~/.refine-prose/*.txt                     the user's own files, managed
                                               by scripts/add-exception.py.
 
 DECISION CHAIN (per word, lowercased)
@@ -40,7 +40,7 @@ from pathlib import Path
 SKILL_DIR = Path(__file__).resolve().parent.parent
 WORDLIST_DIR = SKILL_DIR / "wordlists"
 SKILL_EXCEPTIONS_DIR = SKILL_DIR / "exceptions"
-USER_EXCEPTIONS_DIR = Path.home() / ".claude" / "refine-prose-exceptions"
+USER_EXCEPTIONS_DIR = Path.home() / ".refine-prose"
 CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "refine-prose"
 try:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -158,33 +158,23 @@ def find_violations(text: str) -> list[tuple[int, int, str, str]]:
     """Return (line, col, word, kind) for each word that does not pass.
 
     kind is one of:
-      blocked      on the blocklist; must be rewritten, cannot be excepted.
-      unknown      in no list; rewrite it or add an exception.
-      proper-noun  capitalized at every appearance and not blocked; treated
-                   as a name and allowed, but still reported so a wrongly
-                   capitalized fancy word gets a second look.
+      blocked   on the blocklist; must be rewritten, cannot be excepted.
+      unknown   in no list; rewrite it or add an exception.
 
-    Each distinct lowercased word is reported once, at its first appearance.
-    Words of two characters or fewer are skipped.
+    Any word written with a leading capital is skipped, so names, headings,
+    and acronyms are left alone. The skip is per appearance: a word that also
+    shows up in lowercase is still checked on that lowercase use.
+
+    Each distinct lowercased word is reported once, at its first lowercase
+    appearance. Words of two characters or fewer are skipped.
     """
     scan = strip_skips(text)
-    matches = list(WORD_RE.finditer(scan))
-
-    # First pass: is every appearance of this word capitalized?
-    always_capitalized: dict[str, bool] = {}
-    for match in matches:
-        lower = match.group().lower()
-        capitalized = match.group()[0].isupper()
-        if lower in always_capitalized:
-            always_capitalized[lower] &= capitalized
-        else:
-            always_capitalized[lower] = capitalized
-
-    # Second pass: classify and report the first hit of each distinct word.
     issues: list[tuple[int, int, str, str]] = []
     seen: set[str] = set()
-    for match in matches:
+    for match in WORD_RE.finditer(scan):
         word = match.group()
+        if word[0].isupper():
+            continue
         lower = word.lower()
         if len(lower) <= 2 or lower in seen:
             continue
@@ -192,8 +182,6 @@ def find_violations(text: str) -> list[tuple[int, int, str, str]]:
         kind = classify(lower)
         if kind == "allowed":
             continue
-        if kind == "unknown" and always_capitalized[lower]:
-            kind = "proper-noun"
         line = text.count("\n", 0, match.start()) + 1
         col = match.start() - text.rfind("\n", 0, match.start())
         issues.append((line, col, word, kind))

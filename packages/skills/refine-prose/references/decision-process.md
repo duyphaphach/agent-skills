@@ -15,17 +15,17 @@ For every word, lowercased, in this order:
 
 The block always wins. An exact match beats a stem match.
 
-## Proper nouns
+## Capitalized words
 
-After the steps above, the gate gives an `unknown` word a second look. If the word is capitalized every time it appears in the file and is not on the blocklist, the gate marks it `proper-noun`: the word passes, but `lint.py` still lists it under "treated as proper nouns" so you can confirm it is a real name and not a fancy word that happened to start a sentence.
+The gate only judges words written in lowercase. Any word with a leading capital is skipped before the steps above run, so names, headings, and acronyms (`Kubernetes`, `ORM`, `Glossary`) are never flagged. The skip is per appearance: if the same word also shows up in lowercase, that lowercase use is still checked.
 
-Three ways to handle a name the gate does not know, cheapest first:
+Three ways to handle a name or term the gate does not know, cheapest first:
 
 | Way | When to use it |
 |-----|----------------|
-| Let the capitalization rule pass it | The default. The word is capitalized everywhere it appears. |
-| Wrap it in backticks | Tool and product names in technical writing. The gate skips backtick spans. |
-| Add it with `add-exception.py` | A name that also shows up lowercase, or one you want allowed for good. |
+| Write it with a leading capital | The default. A capital is enough for the gate to skip the word. |
+| Wrap it in backticks | Terms you want to keep lowercase. The gate skips backtick spans. |
+| Add it with `add-exception.py` | A name or term that must pass even when written in lowercase. |
 
 ## What to do for each flagged word
 
@@ -75,7 +75,7 @@ Only for a genuine proper noun, an abbreviation, or a protocol name with no plai
 python3 scripts/add-exception.py CATEGORY WORD
 ```
 
-`add-exception.py` checks the word first. It refuses a word that is not a single lowercase token, is on the blocklist, or already passes another way. It writes only to `~/.claude/refine-prose-exceptions/`. A `[blocked]` word can never be added: rewrite it.
+`add-exception.py` checks the word first. It refuses a word that is not a single lowercase token, is on the blocklist, or already passes another way. It writes only to `~/.refine-prose/`. A `[blocked]` word can never be added: rewrite it.
 
 ## Exception categories
 
@@ -106,4 +106,4 @@ Pick the category that fits. A new category name is allowed if none do.
 | `wordlists/tech-terms.txt` | Real technical jargon: protocols, languages, frameworks |
 | `wordlists/block.txt` | Fancy machine-coded words, rejected even when common |
 
-The base lists and the built-in `exceptions/` files ship with the skill. Your own exceptions live in `~/.claude/refine-prose-exceptions/` and grow through `add-exception.py`.
+The base lists and the built-in `exceptions/` files ship with the skill. Your own exceptions live in `~/.refine-prose/` and grow through `add-exception.py`.

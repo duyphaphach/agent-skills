@@ -38,13 +38,6 @@ def _as_dicts(violations: list[tuple[int, int, str, str]]) -> list[dict]:
     ]
 
 
-def _grade(violations: list[dict]) -> tuple[list[dict], list[dict]]:
-    """Split violations into (failing, proper_nouns). Proper nouns pass."""
-    failing = [v for v in violations if v["kind"] in ("blocked", "unknown")]
-    nouns = [v for v in violations if v["kind"] == "proper-noun"]
-    return failing, nouns
-
-
 def lint_file(path: str) -> dict:
     """Worker: lint one file. Safe to run in a thread (own file only)."""
     try:
@@ -52,14 +45,12 @@ def lint_file(path: str) -> dict:
     except (OSError, ValueError) as error:
         return {"path": path, "ok": False, "error": str(error), "violations": []}
     violations = _as_dicts(find_violations(text))
-    failing, _ = _grade(violations)
-    return {"path": path, "ok": not failing, "violations": violations}
+    return {"path": path, "ok": not violations, "violations": violations}
 
 
 def lint_stdin() -> dict:
     violations = _as_dicts(find_violations(sys.stdin.read()))
-    failing, _ = _grade(violations)
-    return {"path": "<stdin>", "ok": not failing, "violations": violations}
+    return {"path": "<stdin>", "ok": not violations, "violations": violations}
 
 
 def report_text(results: list[dict], max_report: int) -> None:
@@ -68,22 +59,18 @@ def report_text(results: list[dict], max_report: int) -> None:
             print(f"refine-prose: cannot read {result['path']}: {result['error']}",
                   file=sys.stderr)
             continue
-        failing, nouns = _grade(result["violations"])
-        if failing:
-            blocked = sum(1 for v in failing if v["kind"] == "blocked")
-            print(f"refine-prose: {result['path']}: {len(failing)} word(s) "
+        violations = result["violations"]
+        if violations:
+            blocked = sum(1 for v in violations if v["kind"] == "blocked")
+            print(f"refine-prose: {result['path']}: {len(violations)} word(s) "
                   f"outside the set, {blocked} blocked", file=sys.stderr)
-            for v in failing[:max_report]:
+            for v in violations[:max_report]:
                 tag = "[blocked, must rewrite]" if v["kind"] == "blocked" else "[unknown]"
                 print(f"  L{v['line']}:{v['col']} {v['word']} {tag}", file=sys.stderr)
-            if len(failing) > max_report:
-                print(f"  ... and {len(failing) - max_report} more", file=sys.stderr)
+            if len(violations) > max_report:
+                print(f"  ... and {len(violations) - max_report} more", file=sys.stderr)
         else:
             print(f"refine-prose: clean: {result['path']}", file=sys.stderr)
-        if nouns:
-            names = ", ".join(sorted({v["word"] for v in nouns}))
-            print(f"  treated as proper nouns ({len(nouns)}), confirm these "
-                  f"are names: {names}", file=sys.stderr)
 
 
 def main() -> int:

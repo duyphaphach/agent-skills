@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Manage your personal refine-prose exceptions.
 
-Personal exceptions live in ~/.claude/refine-prose-exceptions/<category>.txt
+Personal exceptions live in ~/.refine-prose/<category>.txt
 and merge into the allowlist the gate uses. This script is the safe way to
 grow that folder: it validates each word before it writes.
 

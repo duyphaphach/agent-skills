@@ -16,6 +16,6 @@ through the script instead:
 python3 ../scripts/add-exception.py CATEGORY WORD ...
 ```
 
-It writes to `~/.claude/refine-prose-exceptions/`, one file per category, and
+It writes to `~/.refine-prose/`, one file per category, and
 checks each word first: a word is taken only when it is a single lowercase
 token, is not on the blocklist, and does not already pass another way.

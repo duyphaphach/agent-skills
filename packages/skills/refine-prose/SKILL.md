@@ -61,7 +61,7 @@ python3 scripts/lint.py path/to/file.md
 | 0 | Clean. You are done. |
 | 2 | Words fall outside the set. Each is listed with a line, a column, and a tag. |
 
-A `[blocked, must rewrite]` tag is a fancy word that can never become an exception. An `[unknown]` tag is a word in no list. Words the gate treats as proper nouns are listed apart and do not fail the gate.
+A `[blocked, must rewrite]` tag is a fancy word that can never become an exception. An `[unknown]` tag is a word in no list. Any word written with a leading capital is skipped, so names, headings, and acronyms never reach the gate.
 
 ### Step 3: fix the flagged words, then run the gate again
 
@@ -74,7 +74,6 @@ Repeat Step 2 and Step 3 until the gate returns 0. **Stop after 5 rounds.** If w
 - [ ] `fix-marks.py` has run on the file
 - [ ] `lint.py` returns exit 0
 - [ ] Every `[blocked]` word was rewritten, not turned into an exception
-- [ ] The proper-noun list holds only real names
 
 ## Commands
 
@@ -97,9 +96,9 @@ Repeat Step 2 and Step 3 until the gate returns 0. **Stop after 5 rounds.** If w
 - Add an exception only for a genuine proper noun, an abbreviation, or a protocol name with no plain replacement. The default is to rewrite.
 - The gate skips backtick spans, fenced code, URLs, links, HTML, and frontmatter. To name a mark or a term on purpose, wrap it in backticks.
 - Quoting the user or a log line still counts. Rewrite around the quote, or accept the flag on purpose.
-- Proper nouns, meaning words capitalized everywhere and not blocked, pass on their own. Confirm the listed ones are real names.
+- Any word written with a leading capital is skipped (`Kubernetes`, `ORM`, heading words). A word that also appears in lowercase is still checked on its lowercase use.
 - `fix-marks.py` skips any file holding the marker `ai-marks: keep`, plus lock files and binary files.
-- `add-exception.py` writes only to `~/.claude/refine-prose-exceptions/`. The base lists ship with the skill.
+- `add-exception.py` writes only to `~/.refine-prose/`. The base lists ship with the skill.
 
 ## Worked example
 
@@ -109,7 +108,7 @@ Before:
 We leverage a comprehensive toolset — the best workflow for Kubernetes.
 ```
 
-`fix-marks.py` turns the `em dash` into a hyphen. `lint.py` then flags `leverage` and `comprehensive` as `[blocked]`, and lists `Kubernetes` as a proper noun. After the fix:
+`fix-marks.py` turns the `em dash` into a hyphen. `lint.py` then flags `leverage` and `comprehensive` as `[blocked]`; `Kubernetes` is skipped because it is capitalized. After the fix:
 
 ```text
 We use a full set of tools, the best workflow for Kubernetes.

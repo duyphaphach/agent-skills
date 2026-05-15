@@ -5,7 +5,7 @@
 # plain-English equivalent. Other categories (numbers, days, brand names, file
 # formats, plugin-internal words) live in the bundled exceptions/ folder.
 #
-# To add your own technical terms, put them in ~/.claude/refine-prose-exceptions/
+# To add your own technical terms, put them in ~/.refine-prose/
 # (categorized files), not here.
 
 # --- Universal abbreviations and protocols ---

@@ -1,7 +1,7 @@
 # refine-prose blocklist -- fancy words always rejected, even if NGSL/NAWL contain them.
 # Exact-match only (no stem expansion) to avoid colliding with real roots.
 # Fixed list -- never changes. To override for one word in your own writing,
-# add it to ~/.claude/refine-prose-exceptions.txt (which beats this list).
+# add it to a file under ~/.refine-prose/ (which beats this list).
 
 # --- LLM-fancy verbs ---
 leverage
