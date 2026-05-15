@@ -1,4 +1,0 @@
-# File streams and POSIX standard channels.
-stdin
-stdout
-stderr

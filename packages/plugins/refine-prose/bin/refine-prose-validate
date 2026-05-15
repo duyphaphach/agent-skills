@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# refine-prose-validate: PreToolUse gate for writes to the plugin's files.
-set -e
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-exec python3 "$HERE/scripts/validate-write.py" "$@"
