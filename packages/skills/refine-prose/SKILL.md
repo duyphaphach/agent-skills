@@ -93,7 +93,7 @@ Repeat Step 2 and Step 3 until the gate returns 0. **Stop after 5 rounds.** If w
 ## Key rules
 
 - A `[blocked]` word must be rewritten. `add-exception.py` will refuse it.
-- Add an exception only for a genuine proper noun, an abbreviation, or a protocol name with no plain replacement. The default is to rewrite.
+- Add an exception only for a lowercase abbreviation or protocol name with no plain replacement. A capitalized name is already skipped, so it needs no exception. The default is to rewrite.
 - The gate skips backtick spans, fenced code, URLs, links, HTML, and frontmatter. To name a mark or a term on purpose, wrap it in backticks.
 - Quoting the user or a log line still counts. Rewrite around the quote, or accept the flag on purpose.
 - Any word written with a leading capital is skipped (`Kubernetes`, `ORM`, heading words). A word that also appears in lowercase is still checked on its lowercase use.

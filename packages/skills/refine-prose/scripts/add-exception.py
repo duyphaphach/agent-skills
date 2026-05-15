@@ -124,8 +124,9 @@ def cmd_add(category: str, words: list[str]) -> int:
         for word, reason in failures:
             print(f"  '{word}' {reason}", file=sys.stderr)
         print("\nDefault action: rewrite the sentence to use a common word. "
-              "Add an exception only for a genuine proper noun, abbreviation, "
-              "or protocol name.", file=sys.stderr)
+              "Add an exception only for a lowercase abbreviation or protocol "
+              "name with no plain replacement. Capitalized names are skipped "
+              "by the gate already.", file=sys.stderr)
         return 2
 
     if to_add:

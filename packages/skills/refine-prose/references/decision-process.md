@@ -69,7 +69,7 @@ If the best word scores 9 or higher, use it. If nothing reaches 9, the word is a
 
 ### Step 5: add an exception (last resort)
 
-Only for a genuine proper noun, an abbreviation, or a protocol name with no plain replacement.
+Only for a lowercase abbreviation or protocol name with no plain replacement. A capitalized name is skipped by the gate already, so it never needs an exception.
 
 ```bash
 python3 scripts/add-exception.py CATEGORY WORD
