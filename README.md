@@ -19,7 +19,7 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
 | [refine-prose](./packages/skills/refine-prose) | Refine writing to plain spoken English and strip AI-trace marks (em dashes, s... |
 | [repo-overview](./packages/skills/repo-overview) | Quickly understand an unfamiliar repository, monorepo, or microservice codeba... |
-| [rfc-creator](./packages/skills/rfc-creator) | Pick and fill the right proposal/decision doc — RFC, ADR, Design Doc, 1-pager... |
+| [rfc-creator](./packages/skills/rfc-creator) | Pick and fill the right proposal or decision doc such as RFC, ADR, Design Doc... |
 | [tech-explain](./packages/skills/tech-explain) | Explain unfamiliar technologies with a concise framework. Use when the user a... |
 | [wireframe-excalidraw](./packages/skills/wireframe-excalidraw) | Turn a markdown brief, screen description, or feature spec into a hand-drawn-... |
 | [wireframe-wire-dsl](./packages/skills/wireframe-wire-dsl) | Turn a markdown brief, screen description, or feature spec into a wire-dsl `.... |

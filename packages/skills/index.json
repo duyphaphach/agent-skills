@@ -65,7 +65,7 @@
     },
     {
       "name": "refine-prose",
-      "description": "Refine writing to plain spoken English and strip AI-trace marks (em dashes, smart quotes, curly punctuation). MUST run before sending any drafted message and before finishing any document, README, or code comment. Keywords: refine, plain english, em dash, smart quotes, prose cleanup, ai detection.",
+      "description": "Refine writing to plain spoken English and strip AI-trace marks such as em dashes, smart quotes, and curly punctuation. MUST run before sending any drafted message and before finishing any document, README, or code comment. Keywords refine, plain english, em dash, smart quotes, prose cleanup, ai detection.",
       "files": [
         "SKILL.md",
         "exceptions/academic-citations.txt",
@@ -105,7 +105,7 @@
     },
     {
       "name": "rfc-creator",
-      "description": "Pick and fill the right proposal/decision doc — RFC, ADR, Design Doc, 1-pager. Keywords: rfc, adr, design doc, decision record, proposal, propose, capture decision, architecture decision.",
+      "description": "Pick and fill the right proposal or decision doc such as RFC, ADR, Design Doc, or 1-pager. Keywords rfc, adr, design doc, decision record, proposal, propose, capture decision, architecture decision.",
       "files": [
         "SKILL.md"
       ]

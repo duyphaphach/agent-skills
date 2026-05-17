@@ -1,6 +1,6 @@
 ---
 name: rfc-creator
-description: Pick and fill the right proposal/decision doc — RFC, ADR, Design Doc, 1-pager. Keywords: rfc, adr, design doc, decision record, proposal, propose, capture decision, architecture decision.
+description: Pick and fill the right proposal or decision doc such as RFC, ADR, Design Doc, or 1-pager. Keywords rfc, adr, design doc, decision record, proposal, propose, capture decision, architecture decision.
 license: MIT
 metadata:
   author: "alexpham"
