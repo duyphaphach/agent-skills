@@ -77,7 +77,7 @@
     },
     {
       "name": "refine-prose",
-      "description": "Refine writing to plain spoken English and strip AI-trace marks (em dashes, smart quotes, curly punctuation). MUST run before sending any drafted message and before finishing any document, README, or code comment. Keywords: refine, plain english, em dash, smart quotes, prose cleanup, ai detection.",
+      "description": "Refine writing to plain spoken English and strip AI-trace marks such as em dashes, smart quotes, and curly punctuation. MUST run before sending any drafted message and before finishing any document, README, or code comment. Keywords refine, plain english, em dash, smart quotes, prose cleanup, ai detection.",
       "version": "1.0.0",
       "source": "./packages/skills/refine-prose",
       "license": "MIT",

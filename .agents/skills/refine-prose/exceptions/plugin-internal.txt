@@ -1,0 +1,18 @@
+# Words the refine-prose skill itself uses in its docs and messages.
+ngsl
+nawl
+gsl
+awl
+allowlist
+denylist
+blocklist
+markdown
+linter
+lint
+stemmer
+plugin
+plugins
+prose
+skill
+skills
+gate

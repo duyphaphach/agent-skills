@@ -26,6 +26,11 @@
       "sourceType": "github",
       "computedHash": "7075ab30f588019197a2f1518bb4c9d33d69d33352af079b5f9c60303ad3886e"
     },
+    "refine-prose": {
+      "source": "/Users/alexpham/Workspace/Personal/agent-skills/packages/skills/refine-prose",
+      "sourceType": "local",
+      "computedHash": "ba751f56f4666a2df42c5c00d71ba7326cf5357986b1c079a18c6cee3115e7e0"
+    },
     "typescript-best-practices": {
       "source": "jwynia/agent-skills",
       "sourceType": "github",

@@ -17,7 +17,7 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | [implementation-plan](./packages/skills/implementation-plan) | Generate a structured implementation plan for any feature, integration, or re... |
 | [mcp-cli](./packages/skills/mcp-cli) | Interface for MCP (Model Context Protocol) servers via CLI. Use when you need... |
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
-| [refine-prose](./packages/skills/refine-prose) | Refine writing to plain spoken English and strip AI-trace marks (em dashes, s... |
+| [refine-prose](./packages/skills/refine-prose) | Refine writing to plain spoken English and strip AI-trace marks such as em da... |
 | [repo-overview](./packages/skills/repo-overview) | Quickly understand an unfamiliar repository, monorepo, or microservice codeba... |
 | [rfc-creator](./packages/skills/rfc-creator) | Pick and fill the right proposal or decision doc such as RFC, ADR, Design Doc... |
 | [tech-explain](./packages/skills/tech-explain) | Explain unfamiliar technologies with a concise framework. Use when the user a... |
