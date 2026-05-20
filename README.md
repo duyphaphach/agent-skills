@@ -12,6 +12,7 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | ----- | ----------- |
 | [basecamp](./packages/skills/basecamp) | \| |
 | [code-review-and-quality](./packages/skills/code-review-and-quality) | Conducts multi-axis code review. Use before merging any change. Use when revi... |
+| [e2e-test-design](./packages/skills/e2e-test-design) | Design end-to-end (e2e) test scenarios by exploring a live, running app with ... |
 | [frontend-refactoring](./packages/skills/frontend-refactoring) | Use when the user wants to migrate templates to the new design system convent... |
 | [html-to-scss-boilerplate](./packages/skills/html-to-scss-boilerplate) | Generate blank SCSS scaffold from HTML structure. Keywords: scss boilerplate,... |
 | [implementation-plan](./packages/skills/implementation-plan) | Generate a structured implementation plan for any feature, integration, or re... |

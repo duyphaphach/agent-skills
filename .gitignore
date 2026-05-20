@@ -30,3 +30,6 @@ __pycache__/
 
 # GitNexus index
 .gitnexus
+
+# Playwright MCP scratch output
+.playwright-mcp/
