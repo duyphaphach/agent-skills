@@ -12,14 +12,10 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | ----- | ----------- |
 | [basecamp](./packages/skills/basecamp) | \| |
 | [code-review-and-quality](./packages/skills/code-review-and-quality) | Conducts multi-axis code review. Use before merging any change. Use when revi... |
-| [content-auditor](./packages/skills/content-marketing/content-auditor) | Audit a blog outline or a finished article and return a score with specific f... |
-| [content-researcher](./packages/skills/content-marketing/content-researcher) | Research a topic for a blog article. Given a keyword, a location, and a conte... |
-| [content-writer](./packages/skills/content-marketing/content-writer) | Write a full blog article. Takes a finished outline, or a keyword plus locati... |
 | [e2e-test-design](./packages/skills/e2e-test-design) | Design end-to-end (e2e) test scenarios by exploring a live, running app with ... |
 | [frontend-refactoring](./packages/skills/frontend-refactoring) | Use when the user wants to migrate templates to the new design system convent... |
 | [html-to-scss-boilerplate](./packages/skills/html-to-scss-boilerplate) | Generate blank SCSS scaffold from HTML structure. Keywords: scss boilerplate,... |
 | [implementation-plan](./packages/skills/implementation-plan) | Generate a structured implementation plan for any feature, integration, or re... |
-| [marketing-pipeline](./packages/skills/content-marketing/marketing-pipeline) | Run the full content-marketing pipeline end to end. Chains content-researcher... |
 | [mcp-cli](./packages/skills/mcp-cli) | Interface for MCP (Model Context Protocol) servers via CLI. Use when you need... |
 | [php-pro](./packages/skills/wordpress/php-pro) | Use when building PHP applications with modern PHP 8.3+ features, Laravel, or... |
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
