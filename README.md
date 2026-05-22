@@ -12,11 +12,16 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | ----- | ----------- |
 | [basecamp](./packages/skills/basecamp) | \| |
 | [code-review-and-quality](./packages/skills/code-review-and-quality) | Conducts multi-axis code review. Use before merging any change. Use when revi... |
+| [content-auditor](./packages/skills/content-marketing/content-auditor) | Audit a blog outline or a finished article and return a score with specific f... |
+| [content-researcher](./packages/skills/content-marketing/content-researcher) | Research a topic for a blog article. Given a keyword, a location, and a conte... |
+| [content-writer](./packages/skills/content-marketing/content-writer) | Write a full blog article. Takes a finished outline, or a keyword plus locati... |
 | [e2e-test-design](./packages/skills/e2e-test-design) | Design end-to-end (e2e) test scenarios by exploring a live, running app with ... |
 | [frontend-refactoring](./packages/skills/frontend-refactoring) | Use when the user wants to migrate templates to the new design system convent... |
 | [html-to-scss-boilerplate](./packages/skills/html-to-scss-boilerplate) | Generate blank SCSS scaffold from HTML structure. Keywords: scss boilerplate,... |
 | [implementation-plan](./packages/skills/implementation-plan) | Generate a structured implementation plan for any feature, integration, or re... |
+| [marketing-pipeline](./packages/skills/content-marketing/marketing-pipeline) | Run the full content-marketing pipeline end to end. Chains content-researcher... |
 | [mcp-cli](./packages/skills/mcp-cli) | Interface for MCP (Model Context Protocol) servers via CLI. Use when you need... |
+| [php-pro](./packages/skills/wordpress/php-pro) | Use when building PHP applications with modern PHP 8.3+ features, Laravel, or... |
 | [playwright-cli](./packages/skills/playwright-cli) | Automates browser interactions for web testing, form filling, screenshots, an... |
 | [refine-prose](./packages/skills/refine-prose) | Refine writing to plain spoken English and strip AI-trace marks such as em da... |
 | [repo-overview](./packages/skills/repo-overview) | Quickly understand an unfamiliar repository, monorepo, or microservice codeba... |
@@ -24,6 +29,21 @@ Agent Skills are folders of instructions, scripts, and resources that agents can
 | [tech-explain](./packages/skills/tech-explain) | Explain unfamiliar technologies with a concise framework. Use when the user a... |
 | [wireframe-excalidraw](./packages/skills/wireframe-excalidraw) | Turn a markdown brief, screen description, or feature spec into a hand-drawn-... |
 | [wireframe-wire-dsl](./packages/skills/wireframe-wire-dsl) | Turn a markdown brief, screen description, or feature spec into a wire-dsl `.... |
+| [wordpress-elementor](./packages/skills/wordpress/wordpress-elementor) | > |
+| [wordpress-pro](./packages/skills/wordpress/wordpress-pro) | Develops custom WordPress themes and plugins, creates and registers Gutenberg... |
+| [wordpress-router](./packages/skills/wordpress/wordpress-router) | Use when the user asks about WordPress codebases (plugins, themes, block them... |
+| [wp-abilities-api](./packages/skills/wordpress/wp-abilities-api) | Use when working with the WordPress Abilities API (wp_register_ability, wp_re... |
+| [wp-block-development](./packages/skills/wordpress/wp-block-development) | Use when developing WordPress (Gutenberg) blocks: block.json metadata, regist... |
+| [wp-block-themes](./packages/skills/wordpress/wp-block-themes) | Use when developing WordPress block themes: theme.json (global settings/style... |
+| [wp-interactivity-api](./packages/skills/wordpress/wp-interactivity-api) | Use when building or debugging WordPress Interactivity API features (data-wp-... |
+| [wp-performance](./packages/skills/wordpress/wp-performance) | Use when investigating or improving WordPress performance (backend-only agent... |
+| [wp-phpstan](./packages/skills/wordpress/wp-phpstan) | Use when configuring, running, or fixing PHPStan static analysis in WordPress... |
+| [wp-playground](./packages/skills/wordpress/wp-playground) | Use for WordPress Playground workflows: fast disposable WP instances in the b... |
+| [wp-plugin-development](./packages/skills/wordpress/wp-plugin-development) | Use when developing WordPress plugins: architecture and hooks, activation/dea... |
+| [wp-project-triage](./packages/skills/wordpress/wp-project-triage) | Use when you need a deterministic inspection of a WordPress repository (plugi... |
+| [wp-rest-api](./packages/skills/wordpress/wp-rest-api) | Use when building, extending, or debugging WordPress REST API endpoints/route... |
+| [wp-wpcli-and-ops](./packages/skills/wordpress/wp-wpcli-and-ops) | Use when working with WP-CLI (wp) for WordPress operations: safe search-repla... |
+| [wpds](./packages/skills/wordpress/wpds) | Use when building UIs leveraging the WordPress Design System (WPDS) and its c... |
 <!-- END:Available-Skills -->
 
 ## Installation

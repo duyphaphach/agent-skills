@@ -32,6 +32,52 @@
       "keywords": []
     },
     {
+      "name": "content-auditor",
+      "description": "Audit a blog outline or a finished article and return a score with specific fixes. Reviews against a fixed rubric, lists what is Good and what is Bad, and for every Bad item gives the exact quote, the problem, and a better suggestion in a table. Scoring is deterministic - the same input scores the same. Use whenever the user wants to score, audit, review, grade, or check the quality of an outline or an article, including an already-published post - e.g. \"score this draft\", \"audit this outline\", \"is this article good enough\", \"review this blog post\". Part of the content-marketing skill stack. Keywords: audit, score, review, grade, quality check, content audit, rubric.",
+      "version": "1.0.0",
+      "source": "./packages/skills/content-marketing/content-auditor",
+      "license": "MIT",
+      "keywords": [
+        "content-audit",
+        "scoring",
+        "review",
+        "rubric",
+        "quality-gate",
+        "barem",
+        "deterministic"
+      ]
+    },
+    {
+      "name": "content-researcher",
+      "description": "Research a topic for a blog article. Given a keyword, a location, and a content angle, it searches the named sources, pulls 20 articles, rates them, and returns the 5 best as ready-to-use outlines with links to the originals. Use whenever the user wants to research a topic before writing, find what competitors rank for, plan what an article should cover, or get outline options - e.g. \"research outlines for this keyword\", \"what should an article on X cover\", \"find the best articles on X\". Part of the content-marketing skill stack. Keywords: research, content research, keyword, competitor analysis, blog outline, content planning.",
+      "version": "1.0.0",
+      "source": "./packages/skills/content-marketing/content-researcher",
+      "license": "MIT",
+      "keywords": [
+        "content-research",
+        "keyword-research",
+        "competitor-analysis",
+        "outline",
+        "content-planning",
+        "seo"
+      ]
+    },
+    {
+      "name": "content-writer",
+      "description": "Write a full blog article. Takes a finished outline, or a keyword plus location plus content angle, and produces a complete article that follows the wording rules, plus a table suggesting where images or visualizations belong. Use whenever the user wants to write, draft, or produce a blog article or post, e.g. \"write a blog post about X\", \"turn this outline into an article\", \"draft an article on this keyword\". Part of the content-marketing skill stack. Keywords: write, draft, blog article, content writing, copywriting, article from outline.",
+      "version": "1.0.0",
+      "source": "./packages/skills/content-marketing/content-writer",
+      "license": "MIT",
+      "keywords": [
+        "content-writing",
+        "blog-article",
+        "copywriting",
+        "draft",
+        "article",
+        "image-suggestions"
+      ]
+    },
+    {
       "name": "e2e-test-design",
       "description": "Design end-to-end (e2e) test scenarios by exploring a live, running app with the Playwright MCP. This is a design-thinking skill. It maps real user journeys, ranks them by risk, and writes a layered set of markdown scenario docs organised as an Epic / Feature / Story tree with severity labels and Given/When/Then steps, ready to map onto Allure Report. It does not write test code, selectors, fixtures, or runner config. Use it whenever the user asks what to test end-to-end, wants an e2e test plan or scenario list, asks to design or review e2e coverage, or says things like \"how should we test this flow\" or \"what scenarios do we need\", even if they do not say \"e2e\" explicitly. Requires a running app URL and a Playwright browser-testing MCP server, discovered with mcp-cli.",
       "version": "1.0.0",
@@ -64,6 +110,23 @@
       "keywords": []
     },
     {
+      "name": "marketing-pipeline",
+      "description": "Run the full content-marketing pipeline end to end. Chains content-researcher, content-writer, and content-auditor with sub-agents to produce a publish-ready article plus social-media versions, then publishes to WordPress, Facebook, or LinkedIn. Use whenever the user wants the whole flow rather than one step - e.g. \"run the content pipeline for this keyword\", \"produce a publish-ready article on X\", \"research write and publish a post about X\", \"publish this article\". Part of the content-marketing skill stack. Keywords: pipeline, content pipeline, produce, publish, end to end, marketing automation, WordPress, Facebook, LinkedIn.",
+      "version": "1.0.0",
+      "source": "./packages/skills/content-marketing/marketing-pipeline",
+      "license": "MIT",
+      "keywords": [
+        "content-pipeline",
+        "marketing-automation",
+        "produce",
+        "publish",
+        "orchestration",
+        "wordpress",
+        "facebook",
+        "linkedin"
+      ]
+    },
+    {
       "name": "mcp-cli",
       "description": "Interface for MCP (Model Context Protocol) servers via CLI. Use when you need to interact with external tools, APIs, or data sources through MCP servers.",
       "version": "1.0.0",
@@ -74,6 +137,14 @@
         "agent",
         "skill"
       ]
+    },
+    {
+      "name": "php-pro",
+      "description": "Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.",
+      "version": "1.1.0",
+      "source": "./packages/skills/wordpress/php-pro",
+      "license": "MIT",
+      "keywords": []
     },
     {
       "name": "playwright-cli",
@@ -159,6 +230,126 @@
       "description": "Turn a markdown brief, screen description, or feature spec into a wire-dsl `.wire` wireframe and render it to SVG/PDF/PNG via the local `wire` CLI. Use when the user asks for a wire-dsl wireframe specifically, OR when they want a deterministic text-based wireframe DSL with multi-format export (SVG/PDF/PNG). For a hand-drawn-looking, edit-in-browser alternative, see the sibling skill `wireframe-excalidraw`.",
       "version": "1.0.0",
       "source": "./packages/skills/wireframe-wire-dsl",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wordpress-elementor",
+      "description": ">",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wordpress-elementor",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wordpress-pro",
+      "description": "Develops custom WordPress themes and plugins, creates and registers Gutenberg blocks and block patterns, configures WooCommerce stores, implements WordPress REST API endpoints, applies security hardening (nonces, sanitization, escaping, capability checks), and optimizes performance through caching and query tuning. Use when building WordPress themes, writing plugins, customizing Gutenberg blocks, extending WooCommerce, working with ACF, using the WordPress REST API, applying hooks and filters, or improving WordPress performance and security.",
+      "version": "1.1.0",
+      "source": "./packages/skills/wordpress/wordpress-pro",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wordpress-router",
+      "description": "Use when the user asks about WordPress codebases (plugins, themes, block themes, Gutenberg blocks, WP core checkouts) and you need to quickly classify the repo and route to the correct workflow/skill (blocks, theme.json, REST API, WP-CLI, performance, security, testing, release packaging).",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wordpress-router",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-abilities-api",
+      "description": "Use when working with the WordPress Abilities API (wp_register_ability, wp_register_ability_category, /wp-json/wp-abilities/v1/*, @wordpress/abilities) including defining abilities, categories, meta, REST exposure, and permissions checks for clients.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-abilities-api",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-block-development",
+      "description": "Use when developing WordPress (Gutenberg) blocks: block.json metadata, register_block_type(_from_metadata), attributes/serialization, supports, dynamic rendering (render.php/render_callback), deprecations/migrations, viewScript vs viewScriptModule, and @wordpress/scripts/@wordpress/create-block build and test workflows.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-block-development",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-block-themes",
+      "description": "Use when developing WordPress block themes: theme.json (global settings/styles), templates and template parts, patterns, style variations, and Site Editor troubleshooting (style hierarchy, overrides, caching).",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-block-themes",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-interactivity-api",
+      "description": "Use when building or debugging WordPress Interactivity API features (data-wp-* directives, @wordpress/interactivity store/state/actions, block viewScriptModule integration, wp_interactivity_*()) including performance, hydration, and directive behavior.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-interactivity-api",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-performance",
+      "description": "Use when investigating or improving WordPress performance (backend-only agent): profiling and measurement (WP-CLI profile/doctor, Server-Timing, Query Monitor via REST headers), database/query optimization, autoloaded options, object caching, cron, HTTP API calls, and safe verification.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-performance",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-phpstan",
+      "description": "Use when configuring, running, or fixing PHPStan static analysis in WordPress projects (plugins/themes/sites): phpstan.neon setup, baselines, WordPress-specific typing, and handling third-party plugin classes.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-phpstan",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-playground",
+      "description": "Use for WordPress Playground workflows: fast disposable WP instances in the browser or locally via @wp-playground/cli (server, run-blueprint, build-snapshot), auto-mounting plugins/themes, switching WP/PHP versions, blueprints, and debugging (Xdebug).",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-playground",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-plugin-development",
+      "description": "Use when developing WordPress plugins: architecture and hooks, activation/deactivation/uninstall, admin UI and Settings API, data storage, cron/tasks, security (nonces/capabilities/sanitization/escaping), and release packaging.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-plugin-development",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-project-triage",
+      "description": "Use when you need a deterministic inspection of a WordPress repository (plugin/theme/block theme/WP core/Gutenberg/full site) including tooling/tests/version hints, and a structured JSON report to guide workflows and guardrails.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-project-triage",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-rest-api",
+      "description": "Use when building, extending, or debugging WordPress REST API endpoints/routes: register_rest_route, WP_REST_Controller/controller classes, schema/argument validation, permission_callback/authentication, response shaping, register_rest_field/register_meta, or exposing CPTs/taxonomies via show_in_rest.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-rest-api",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wp-wpcli-and-ops",
+      "description": "Use when working with WP-CLI (wp) for WordPress operations: safe search-replace, db export/import, plugin/theme/user/content management, cron, cache flushing, multisite, and scripting/automation with wp-cli.yml.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wp-wpcli-and-ops",
+      "license": "MIT",
+      "keywords": []
+    },
+    {
+      "name": "wpds",
+      "description": "Use when building UIs leveraging the WordPress Design System (WPDS) and its components, tokens, patterns, etc.",
+      "version": "1.0.0",
+      "source": "./packages/skills/wordpress/wpds",
       "license": "MIT",
       "keywords": []
     }

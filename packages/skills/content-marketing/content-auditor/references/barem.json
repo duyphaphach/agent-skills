@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "pass_threshold": 80,
+  "rubrics": {
+    "outline": {
+      "max": 100,
+      "criteria": [
+        {
+          "id": "kw_in_h1",
+          "label": "Keyword appears in the H1 title",
+          "points": 12,
+          "type": "auto",
+          "check": "keywordInHeading",
+          "params": { "level": 1 }
+        },
+        {
+          "id": "kw_in_h2",
+          "label": "Keyword appears in at least one H2",
+          "points": 8,
+          "type": "auto",
+          "check": "keywordInAnyHeading",
+          "params": { "level": 2 }
+        },
+        {
+          "id": "h2_count",
+          "label": "Has 4 to 9 H2 sections",
+          "points": 10,
+          "type": "auto",
+          "check": "countInRange",
+          "params": { "node": "h2", "min": 4, "max": 9 }
+        },
+        {
+          "id": "h3_depth",
+          "label": "Has at least 3 H3 sub-points",
+          "points": 10,
+          "type": "auto",
+          "check": "countInRange",
+          "params": { "node": "h3", "min": 3, "max": 9999 }
+        },
+        {
+          "id": "has_angle",
+          "label": "States a named angle",
+          "points": 8,
+          "type": "auto",
+          "check": "sectionExists",
+          "params": { "pattern": "angle\\s*:" }
+        },
+        {
+          "id": "has_image_plan",
+          "label": "Includes an image plan",
+          "points": 12,
+          "type": "auto",
+          "check": "sectionExists",
+          "params": { "pattern": "image plan" }
+        },
+        {
+          "id": "search_intent",
+          "label": "Answers the dominant search intent behind the keyword",
+          "points": 20,
+          "type": "judgment",
+          "levels": [0, 10, 20],
+          "guide": "0 = misses the intent. 10 = serves it but with drift or filler sections. 20 = every heading serves the one clear reason someone searches this keyword."
+        },
+        {
+          "id": "coverage_gap",
+          "label": "Covers useful sub-topics the top-ranking articles miss",
+          "points": 20,
+          "type": "judgment",
+          "levels": [0, 10, 20],
+          "guide": "0 = repeats what the top results already do. 10 = one real addition. 20 = two or more sub-topics the competitors miss or treat thinly."
+        }
+      ]
+    },
+    "article": {
+      "max": 100,
+      "criteria": [
+        {
+          "id": "kw_in_h1",
+          "label": "Keyword appears in the H1 title",
+          "points": 8,
+          "type": "auto",
+          "check": "keywordInHeading",
+          "params": { "level": 1 }
+        },
+        {
+          "id": "kw_in_intro",
+          "label": "Keyword appears in the first 100 words",
+          "points": 10,
+          "type": "auto",
+          "check": "keywordInBody",
+          "params": { "firstWords": 100 }
+        },
+        {
+          "id": "h2_count",
+          "label": "Has 3 to 9 H2 sections",
+          "points": 8,
+          "type": "auto",
+          "check": "countInRange",
+          "params": { "node": "h2", "min": 3, "max": 9 }
+        },
+        {
+          "id": "word_count",
+          "label": "Body is 800 to 2500 words",
+          "points": 8,
+          "type": "auto",
+          "check": "countInRange",
+          "params": { "node": "word", "min": 800, "max": 2500 }
+        },
+        {
+          "id": "avg_sentence",
+          "label": "Average sentence is 22 words or fewer",
+          "points": 8,
+          "type": "auto",
+          "check": "avgWords",
+          "params": { "unit": "sentence", "max": 22 }
+        },
+        {
+          "id": "avg_paragraph",
+          "label": "Average paragraph is 70 words or fewer",
+          "points": 8,
+          "type": "auto",
+          "check": "avgWords",
+          "params": { "unit": "paragraph", "max": 70 }
+        },
+        {
+          "id": "max_paragraph",
+          "label": "No paragraph runs over 110 words",
+          "points": 6,
+          "type": "auto",
+          "check": "maxWords",
+          "params": { "unit": "paragraph", "max": 110 }
+        },
+        {
+          "id": "has_links",
+          "label": "Has at least 3 links",
+          "points": 6,
+          "type": "auto",
+          "check": "linkCount",
+          "params": { "min": 3 }
+        },
+        {
+          "id": "has_image_table",
+          "label": "Includes an image or visualization suggestion section",
+          "points": 6,
+          "type": "auto",
+          "check": "sectionExists",
+          "params": { "pattern": "image|visual" }
+        },
+        {
+          "id": "readability",
+          "label": "Plain words, scannable, active voice",
+          "points": 12,
+          "type": "judgment",
+          "levels": [0, 6, 12],
+          "guide": "0 = dense, jargon-heavy, hard to scan. 6 = mostly clear with rough patches. 12 = plain words throughout, active voice, easy to scan."
+        },
+        {
+          "id": "voice_match",
+          "label": "Matches the chosen voice and tone",
+          "points": 10,
+          "type": "judgment",
+          "levels": [0, 5, 10],
+          "guide": "0 = wrong voice. 5 = right voice but drifts. 10 = consistent from intro to close."
+        },
+        {
+          "id": "depth_accuracy",
+          "label": "Deep, accurate, and claims are sourced",
+          "points": 10,
+          "type": "judgment",
+          "levels": [0, 5, 10],
+          "guide": "0 = shallow or unsourced claims. 5 = solid but thin in places. 10 = thorough, accurate, every factual claim has a source."
+        }
+      ]
+    }
+  }
+}

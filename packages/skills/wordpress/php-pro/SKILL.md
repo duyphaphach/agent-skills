@@ -3,8 +3,8 @@ name: php-pro
 description: Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.
 license: MIT
 metadata:
-  author: "duyphaphach"
-  repository: "git@git.ekotek.vn:d2/ekotek-poc/autotest/qa-skills.git"
+  author: "alexpham"
+  repository: "git@github.com:duyphaphach/agent-skills.git"
   version: "1.1.0"
   domain: language
   triggers: PHP, Laravel, Symfony, Composer, PHPStan, PSR, PHP API, Eloquent, Doctrine

@@ -102,8 +102,40 @@ function parseFrontmatter(content) {
   return result;
 }
 
-// Scans the packages/skills directory for subdirectories containing a SKILL.md,
-// parses each file's frontmatter, and returns a sorted array of skill metadata.
+// Reads and parses the SKILL.md at <SKILLS_DIR>/<relPath>/SKILL.md.
+// Returns a skill metadata object, or null when there is no SKILL.md there.
+async function readSkill(relPath) {
+  let skillMd;
+  try {
+    skillMd = await readFile(join(SKILLS_DIR, relPath, "SKILL.md"), "utf-8");
+  } catch {
+    return null;
+  }
+
+  const frontmatter = parseFrontmatter(skillMd);
+  const metadata = frontmatter.metadata || {};
+  const keywords =
+    typeof metadata.keywords === "string"
+      ? metadata.keywords
+          .split(",")
+          .map((k) => k.trim())
+          .filter(Boolean)
+      : [];
+
+  return {
+    dirName: relPath,
+    name: frontmatter.name || relPath,
+    description: frontmatter.description || "",
+    license: frontmatter.license || "MIT",
+    version: metadata.version || "1.0.0",
+    keywords,
+  };
+}
+
+// Scans packages/skills for skills. A top-level directory with a SKILL.md is a
+// skill. A top-level directory without one is treated as a group folder and its
+// immediate sub-directories are scanned for skills (e.g. content-marketing,
+// wordpress). Grouping nests only one level deep.
 async function discoverSkills() {
   const skills = [];
 
@@ -120,34 +152,30 @@ async function discoverSkills() {
       continue;
     }
 
-    const skillDir = join(SKILLS_DIR, entry.name);
-    const skillMdPath = join(skillDir, "SKILL.md");
+    const direct = await readSkill(entry.name);
+    if (direct) {
+      skills.push(direct);
+      continue;
+    }
 
+    // No SKILL.md at this level — treat the directory as a group of skills.
+    let groupEntries;
     try {
-      const skillMd = await readFile(skillMdPath, "utf-8");
-      const frontmatter = parseFrontmatter(skillMd);
-      const metadata = frontmatter.metadata || {};
-      const keywords =
-        typeof metadata.keywords === "string"
-          ? metadata.keywords
-              .split(",")
-              .map((k) => k.trim())
-              .filter(Boolean)
-          : [];
-
-      skills.push({
-        dirName: entry.name,
-        name: frontmatter.name || entry.name,
-        description: frontmatter.description || "",
-        license: frontmatter.license || "MIT",
-        version: metadata.version || "1.0.0",
-        keywords,
+      groupEntries = await readdir(join(SKILLS_DIR, entry.name), {
+        withFileTypes: true,
       });
-    } catch (error) {
-      console.warn(
-        `Warning: Could not read skill at ${entry.name}:`,
-        error.message
-      );
+    } catch {
+      continue;
+    }
+
+    for (const sub of groupEntries) {
+      if (!sub.isDirectory()) {
+        continue;
+      }
+      const nested = await readSkill(`${entry.name}/${sub.name}`);
+      if (nested) {
+        skills.push(nested);
+      }
     }
   }
 

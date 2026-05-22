@@ -15,6 +15,41 @@
       ]
     },
     {
+      "name": "content-marketing/content-auditor",
+      "description": "Audit a blog outline or a finished article and return a score with specific fixes. Reviews against a fixed rubric, lists what is Good and what is Bad, and for every Bad item gives the exact quote, the problem, and a better suggestion in a table. Scoring is deterministic - the same input scores the same. Use whenever the user wants to score, audit, review, grade, or check the quality of an outline or an article, including an already-published post - e.g. \"score this draft\", \"audit this outline\", \"is this article good enough\", \"review this blog post\". Part of the content-marketing skill stack. Keywords: audit, score, review, grade, quality check, content audit, rubric.",
+      "files": [
+        "SKILL.md",
+        "references/barem.json",
+        "references/barem.md",
+        "references/wording-language-rules/common.md",
+        "references/wording-language-rules/locales/common.md",
+        "references/wording-language-rules/locales/en.md",
+        "references/wording-language-rules/locales/vi.md",
+        "references/wording-language-rules/topics/common.md",
+        "references/wording-language-rules/topics/finance.md",
+        "scripts/score.mjs"
+      ]
+    },
+    {
+      "name": "content-marketing/content-researcher",
+      "description": "Research a topic for a blog article. Given a keyword, a location, and a content angle, it searches the named sources, pulls 20 articles, rates them, and returns the 5 best as ready-to-use outlines with links to the originals. Use whenever the user wants to research a topic before writing, find what competitors rank for, plan what an article should cover, or get outline options - e.g. \"research outlines for this keyword\", \"what should an article on X cover\", \"find the best articles on X\". Part of the content-marketing skill stack. Keywords: research, content research, keyword, competitor analysis, blog outline, content planning.",
+      "files": [
+        "SKILL.md",
+        "references/angles.md",
+        "references/sources.md"
+      ]
+    },
+    {
+      "name": "content-marketing/content-writer",
+      "description": "Write a full blog article. Takes a finished outline, or a keyword plus location plus content angle, and produces a complete article that follows the wording rules, plus a table suggesting where images or visualizations belong. Use whenever the user wants to write, draft, or produce a blog article or post, e.g. \"write a blog post about X\", \"turn this outline into an article\", \"draft an article on this keyword\". Part of the content-marketing skill stack. Keywords: write, draft, blog article, content writing, copywriting, article from outline.",
+      "files": [
+        "SKILL.md",
+        "references/style.md",
+        "scripts/_marks.py",
+        "scripts/fix-marks.py"
+      ]
+    },
+    {
       "name": "e2e-test-design",
       "description": "Design end-to-end (e2e) test scenarios by exploring a live, running app with the Playwright MCP. This is a design-thinking skill. It maps real user journeys, ranks them by risk, and writes a layered set of markdown scenario docs organised as an Epic / Feature / Story tree with severity labels and Given/When/Then steps, ready to map onto Allure Report. It does not write test code, selectors, fixtures, or runner config. Use it whenever the user asks what to test end-to-end, wants an e2e test plan or scenario list, asks to design or review e2e coverage, or says things like \"how should we test this flow\" or \"what scenarios do we need\", even if they do not say \"e2e\" explicitly. Requires a running app URL and a Playwright browser-testing MCP server, discovered with mcp-cli.",
       "files": [
@@ -50,10 +85,33 @@
       ]
     },
     {
+      "name": "content-marketing/marketing-pipeline",
+      "description": "Run the full content-marketing pipeline end to end. Chains content-researcher, content-writer, and content-auditor with sub-agents to produce a publish-ready article plus social-media versions, then publishes to WordPress, Facebook, or LinkedIn. Use whenever the user wants the whole flow rather than one step - e.g. \"run the content pipeline for this keyword\", \"produce a publish-ready article on X\", \"research write and publish a post about X\", \"publish this article\". Part of the content-marketing skill stack. Keywords: pipeline, content pipeline, produce, publish, end to end, marketing automation, WordPress, Facebook, LinkedIn.",
+      "files": [
+        "SKILL.md",
+        "references/publishing.md",
+        "scripts/check-outputs.mjs",
+        "scripts/credentials.mjs",
+        "scripts/publish.mjs"
+      ]
+    },
+    {
       "name": "mcp-cli",
       "description": "Interface for MCP (Model Context Protocol) servers via CLI. Use when you need to interact with external tools, APIs, or data sources through MCP servers.",
       "files": [
         "SKILL.md"
+      ]
+    },
+    {
+      "name": "wordpress/php-pro",
+      "description": "Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.",
+      "files": [
+        "SKILL.md",
+        "references/async-patterns.md",
+        "references/laravel-patterns.md",
+        "references/modern-php-features.md",
+        "references/symfony-patterns.md",
+        "references/testing-quality.md"
       ]
     },
     {
@@ -153,6 +211,182 @@
         "references/dsl-cheatsheet.md",
         "references/patterns.md",
         "references/troubleshooting.md"
+      ]
+    },
+    {
+      "name": "wordpress/wordpress-elementor",
+      "description": ">",
+      "files": [
+        "SKILL.md",
+        "references/elementor-workflows.md"
+      ]
+    },
+    {
+      "name": "wordpress/wordpress-pro",
+      "description": "Develops custom WordPress themes and plugins, creates and registers Gutenberg blocks and block patterns, configures WooCommerce stores, implements WordPress REST API endpoints, applies security hardening (nonces, sanitization, escaping, capability checks), and optimizes performance through caching and query tuning. Use when building WordPress themes, writing plugins, customizing Gutenberg blocks, extending WooCommerce, working with ACF, using the WordPress REST API, applying hooks and filters, or improving WordPress performance and security.",
+      "files": [
+        "SKILL.md",
+        "references/gutenberg-blocks.md",
+        "references/hooks-filters.md",
+        "references/performance-security.md",
+        "references/plugin-architecture.md",
+        "references/theme-development.md"
+      ]
+    },
+    {
+      "name": "wordpress/wordpress-router",
+      "description": "Use when the user asks about WordPress codebases (plugins, themes, block themes, Gutenberg blocks, WP core checkouts) and you need to quickly classify the repo and route to the correct workflow/skill (blocks, theme.json, REST API, WP-CLI, performance, security, testing, release packaging).",
+      "files": [
+        "SKILL.md",
+        "references/decision-tree.md"
+      ]
+    },
+    {
+      "name": "wordpress/wp-abilities-api",
+      "description": "Use when working with the WordPress Abilities API (wp_register_ability, wp_register_ability_category, /wp-json/wp-abilities/v1/*, @wordpress/abilities) including defining abilities, categories, meta, REST exposure, and permissions checks for clients.",
+      "files": [
+        "SKILL.md",
+        "references/php-registration.md",
+        "references/rest-api.md"
+      ]
+    },
+    {
+      "name": "wordpress/wp-block-development",
+      "description": "Use when developing WordPress (Gutenberg) blocks: block.json metadata, register_block_type(_from_metadata), attributes/serialization, supports, dynamic rendering (render.php/render_callback), deprecations/migrations, viewScript vs viewScriptModule, and @wordpress/scripts/@wordpress/create-block build and test workflows.",
+      "files": [
+        "SKILL.md",
+        "references/attributes-and-serialization.md",
+        "references/block-json.md",
+        "references/creating-new-blocks.md",
+        "references/debugging.md",
+        "references/deprecations.md",
+        "references/dynamic-rendering.md",
+        "references/inner-blocks.md",
+        "references/registration.md",
+        "references/supports-and-wrappers.md",
+        "references/tooling-and-testing.md",
+        "scripts/list_blocks.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wp-block-themes",
+      "description": "Use when developing WordPress block themes: theme.json (global settings/styles), templates and template parts, patterns, style variations, and Site Editor troubleshooting (style hierarchy, overrides, caching).",
+      "files": [
+        "SKILL.md",
+        "references/creating-new-block-theme.md",
+        "references/debugging.md",
+        "references/patterns.md",
+        "references/style-variations.md",
+        "references/templates-and-parts.md",
+        "references/theme-json.md",
+        "scripts/detect_block_themes.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wp-interactivity-api",
+      "description": "Use when building or debugging WordPress Interactivity API features (data-wp-* directives, @wordpress/interactivity store/state/actions, block viewScriptModule integration, wp_interactivity_*()) including performance, hydration, and directive behavior.",
+      "files": [
+        "SKILL.md",
+        "references/debugging.md",
+        "references/directives-quickref.md",
+        "references/server-side-rendering.md"
+      ]
+    },
+    {
+      "name": "wordpress/wp-performance",
+      "description": "Use when investigating or improving WordPress performance (backend-only agent): profiling and measurement (WP-CLI profile/doctor, Server-Timing, Query Monitor via REST headers), database/query optimization, autoloaded options, object caching, cron, HTTP API calls, and safe verification.",
+      "files": [
+        "SKILL.md",
+        "references/autoload-options.md",
+        "references/cron.md",
+        "references/database.md",
+        "references/http-api.md",
+        "references/measurement.md",
+        "references/object-cache.md",
+        "references/query-monitor-headless.md",
+        "references/server-timing.md",
+        "references/wp-cli-doctor.md",
+        "references/wp-cli-profile.md",
+        "scripts/perf_inspect.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wp-phpstan",
+      "description": "Use when configuring, running, or fixing PHPStan static analysis in WordPress projects (plugins/themes/sites): phpstan.neon setup, baselines, WordPress-specific typing, and handling third-party plugin classes.",
+      "files": [
+        "SKILL.md",
+        "references/configuration.md",
+        "references/third-party-classes.md",
+        "references/wordpress-annotations.md",
+        "scripts/phpstan_inspect.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wp-playground",
+      "description": "Use for WordPress Playground workflows: fast disposable WP instances in the browser or locally via @wp-playground/cli (server, run-blueprint, build-snapshot), auto-mounting plugins/themes, switching WP/PHP versions, blueprints, and debugging (Xdebug).",
+      "files": [
+        "SKILL.md",
+        "references/blueprints.md",
+        "references/cli-commands.md",
+        "references/debugging.md"
+      ]
+    },
+    {
+      "name": "wordpress/wp-plugin-development",
+      "description": "Use when developing WordPress plugins: architecture and hooks, activation/deactivation/uninstall, admin UI and Settings API, data storage, cron/tasks, security (nonces/capabilities/sanitization/escaping), and release packaging.",
+      "files": [
+        "SKILL.md",
+        "references/data-and-cron.md",
+        "references/debugging.md",
+        "references/lifecycle.md",
+        "references/security.md",
+        "references/settings-api.md",
+        "references/structure.md",
+        "scripts/detect_plugins.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wp-project-triage",
+      "description": "Use when you need a deterministic inspection of a WordPress repository (plugin/theme/block theme/WP core/Gutenberg/full site) including tooling/tests/version hints, and a structured JSON report to guide workflows and guardrails.",
+      "files": [
+        "SKILL.md",
+        "references/triage.schema.json",
+        "scripts/detect_wp_project.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wp-rest-api",
+      "description": "Use when building, extending, or debugging WordPress REST API endpoints/routes: register_rest_route, WP_REST_Controller/controller classes, schema/argument validation, permission_callback/authentication, response shaping, register_rest_field/register_meta, or exposing CPTs/taxonomies via show_in_rest.",
+      "files": [
+        "SKILL.md",
+        "references/authentication.md",
+        "references/custom-content-types.md",
+        "references/discovery-and-params.md",
+        "references/responses-and-fields.md",
+        "references/routes-and-endpoints.md",
+        "references/schema.md"
+      ]
+    },
+    {
+      "name": "wordpress/wp-wpcli-and-ops",
+      "description": "Use when working with WP-CLI (wp) for WordPress operations: safe search-replace, db export/import, plugin/theme/user/content management, cron, cache flushing, multisite, and scripting/automation with wp-cli.yml.",
+      "files": [
+        "SKILL.md",
+        "references/automation.md",
+        "references/cron-and-cache.md",
+        "references/debugging.md",
+        "references/multisite.md",
+        "references/packages-and-updates.md",
+        "references/safety.md",
+        "references/search-replace.md",
+        "scripts/wpcli_inspect.mjs"
+      ]
+    },
+    {
+      "name": "wordpress/wpds",
+      "description": "Use when building UIs leveraging the WordPress Design System (WPDS) and its components, tokens, patterns, etc.",
+      "files": [
+        "SKILL.md"
       ]
     }
   ]
