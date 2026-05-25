@@ -33,7 +33,7 @@
     },
     {
       "name": "e2e-test-design",
-      "description": "Design end-to-end (e2e) test scenarios by exploring a live, running app with the Playwright MCP. This is a design-thinking skill. It maps real user journeys, ranks them by risk, and writes a layered set of markdown scenario docs organised as an Epic / Feature / Story tree with severity labels and Given/When/Then steps, ready to map onto Allure Report. It does not write test code, selectors, fixtures, or runner config. Use it whenever the user asks what to test end-to-end, wants an e2e test plan or scenario list, asks to design or review e2e coverage, or says things like \"how should we test this flow\" or \"what scenarios do we need\", even if they do not say \"e2e\" explicitly. Requires a running app URL and a Playwright browser-testing MCP server, discovered with mcp-cli.",
+      "description": "Design end-to-end (e2e) test scenarios by exploring a live, running app with the Playwright MCP. This is a design-thinking skill. It maps real user journeys, ranks them by risk, and writes a layered set of markdown scenario docs organised as an Epic / Feature / Story tree with severity labels and Gherkin steps, ready to map onto Allure Report. It does not write test code, selectors, fixtures, or runner config. Use it whenever the user asks what to test end-to-end, wants an e2e test plan or scenario list, asks to design or review e2e coverage, or says things like \"how should we test this flow\" or \"what scenarios do we need\", even if they do not say \"e2e\" explicitly. Requires a running app URL and a Playwright browser-testing MCP server, discovered with mcp-cli.",
       "version": "1.0.0",
       "source": "./packages/skills/e2e-test-design",
       "license": "MIT",
