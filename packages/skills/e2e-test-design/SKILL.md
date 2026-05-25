@@ -1,6 +1,6 @@
 ---
 name: e2e-test-design
-description: Design end-to-end (e2e) test scenarios by exploring a live, running app with the Playwright MCP. This is a design-thinking skill. It maps real user journeys, ranks them by risk, and writes a layered set of markdown scenario docs organised as an Epic / Feature / Story tree with severity labels and Given/When/Then steps, ready to map onto Allure Report. It does not write test code, selectors, fixtures, or runner config. Use it whenever the user asks what to test end-to-end, wants an e2e test plan or scenario list, asks to design or review e2e coverage, or says things like "how should we test this flow" or "what scenarios do we need", even if they do not say "e2e" explicitly. Requires a running app URL and a Playwright browser-testing MCP server, discovered with mcp-cli.
+description: Design end-to-end (e2e) test scenarios by exploring a live, running app with the Playwright MCP. This is a design-thinking skill. It maps real user journeys, ranks them by risk, and writes a layered set of markdown scenario docs organised as an Epic / Feature / Story tree with severity labels and Gherkin steps, ready to map onto Allure Report. It does not write test code, selectors, fixtures, or runner config. Use it whenever the user asks what to test end-to-end, wants an e2e test plan or scenario list, asks to design or review e2e coverage, or says things like "how should we test this flow" or "what scenarios do we need", even if they do not say "e2e" explicitly. Requires a running app URL and a Playwright browser-testing MCP server, discovered with mcp-cli.
 ---
 
 # E2E Test Scenario Design
@@ -19,7 +19,7 @@ layers, so the result drops into Allure as-is.
 | Epic | A product area | Shopping |
 | Feature | One journey | Checkout |
 | Story | One behavior | Check out as a guest |
-| Scenario | One test, with Given/When/Then steps | Guest checkout, declined card |
+| Scenario | One test, written in Gherkin | Guest checkout, declined card |
 
 ## Rules
 
@@ -30,9 +30,14 @@ layers, so the result drops into Allure as-is.
 - **Check what the user sees** (a message, a redirect, a new row), not database
   rows or hidden state.
 - **Behavior, not buttons.** "Submit the checkout form", not "click `#btn-2`".
+- **Use Gherkin.** Standard keywords only (`Feature`, `Background`, `Scenario`,
+  `Given` / `When` / `Then` / `And` / `But`). Bold step keywords in markdown
+  (`**Given**`, `**When**`, ...) so they read as grammar, not labels. Shared
+  setup goes in `Background`.
 - **Validation rides inside journeys.** One scenario for an incomplete form, not
   one per field.
-- **Each scenario stands alone.** Preconditions state the starting point.
+- **Each scenario stands alone.** An opening `**Given**` (or shared
+  `Background`) states the starting point.
 - **Needs a live app and MCP.** A running app URL and a Playwright browser MCP.
   Missing either: stop.
 
@@ -130,21 +135,26 @@ Example partial `shopping/checkout.md`:
 
 ## Story: Check out as a guest
 
-### Guest checks out with a valid card
+### Background:
+- **Given** the user is not logged in
+- **And** the cart holds one item
+
+### Scenario: Guest checks out with a valid card
 - Labels: epic=Shopping, feature=Checkout, story=Check out as a guest,
   severity=critical, tags=[happy-path, smoke]
-- Preconditions: cart holds one item, user not logged in
-- Given the guest is on the cart page
-- When they enter a valid card and submit the checkout form
-- Then an "Order confirmed" message and an order number appear
+- **Given** the guest is on the cart page
+- **When** they enter a valid card
+- **And** they submit the checkout form
+- **Then** an "Order confirmed" message and an order number appear
 
-### Checkout shows an error on a declined card
+### Scenario: Checkout shows an error on a declined card
 - Labels: epic=Shopping, feature=Checkout, story=Check out as a guest,
   severity=normal, tags=[error]
-- Preconditions: cart holds one item, user not logged in
-- Given the guest is on the checkout page
-- When they submit a card the bank declines
-- Then an inline "Card declined" error shows and no order is created
+- **Given** the guest is on the checkout page
+- **When** they submit a card the bank declines
+- **Then** an inline "Card declined" error shows
+- **And** no order is created
 ```
 
-Labels copy into Allure annotations; each Given/When/Then line is one Allure step.
+Labels copy into Allure annotations; each bolded Gherkin step (`**Given**` /
+`**When**` / `**Then**` / `**And**` / `**But**`) is one Allure step.
